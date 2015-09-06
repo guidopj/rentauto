@@ -10,11 +10,16 @@ import java.sql.ResultSet
 import org.junit.After
 import ar.edu.unq.epers.excepciones.UsuarioNoExisteException
 import java.sql.Date
+import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
+import ar.edu.unq.epers.excepciones.UsuarioNoValidadoException
 
 class Sistema_Test {
 	
 	Sistema sis;
 	Date fechaNac;
+	
+	Usuario usuario
+	
 	@Before
 	def void setUp(){
 		sis = new Sistema();
@@ -35,6 +40,7 @@ class Sistema_Test {
 			var ResultSet rs = ps3.executeQuery();
 			Assert.assertFalse(rs.next().equals(null))
 			Assert.assertTrue(rs.getString("NOMBRE").equals("PEPITO"));
+			Assert.assertEquals(0,rs.getInt("VALIDADO"))
 			return null;
 		]
 	}
@@ -88,6 +94,67 @@ class Sistema_Test {
 		sis.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",fechaNac,"");
 		sis.validarCuenta("PEPPGOM1357");
 	}
+	
+	@Test(expected=ContrasenaInvalidaException)
+	def testIngresarUsuarioContrasenaInvalida(){
+		sis.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",fechaNac,"aaa");
+		sis.validarCuenta("PEPGOM1357");
+		
+		Assert.assertEquals(sis.ingresarUsuario("PEPGOM", "aaaaa"),typeof(Usuario))
+	}
+	
+	@Test(expected=UsuarioNoValidadoException)
+	def testIngresarUsuarioNoValidado(){	
+		sis.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",fechaNac,"aaa");
+		Assert.assertEquals(sis.ingresarUsuario("PEPGOM", "aaa"),typeof(Usuario))
+	}
+	
+	@Test
+	def testIngresarUsuarioExiste(){
+		sis.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",fechaNac,"aaa");
+		sis.validarCuenta("PEPGOM1357");
+		Assert.assertEquals(sis.ingresarUsuario("PEPGOM", "aaa").class,typeof(Usuario))
+	}
+	
+	
+	@Test
+	def void cambiarContrasenaCorrecto(){
+		sis.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",fechaNac,"viejaAAA");
+		sis.cambiarContrasena("PEPGOM", "viejaAAA", "nuevaAAA");
+		
+		sis.homeSistema.queryDb[conn|
+			var PreparedStatement ps3  = conn.prepareStatement("SELECT * FROM Usuarios WHERE NOMBRE_USUARIO= 'PEPGOM'");
+			var ResultSet rs = ps3.executeQuery();
+			rs.next();
+			var String contrasena = rs.getString("CONTRASENA");
+			Assert.assertEquals("nuevaAAA",contrasena);
+			return null;
+			]
+	}
+	
+	@Test(expected=ContrasenaInvalidaException)
+	def void cambiarContrasenaInvalida(){
+		sis.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",fechaNac,"viejaAAA");
+		sis.cambiarContrasena("PEPGOM", "viejaAAAAAA", "nuevaAAA");
+	}
+	
+	
+	
+	//ingresarUsuario(String nombreUsuario, String contr)
+	
+//	@Test
+//	def void cambiarContrasena_PEPITO(){
+//		sis.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",java.sql.Date.valueOf("2013-09-04"),"");
+//		sis.validarCuenta("PEPGOM1357");
+//		sis.homeSistema.queryDb[conn|
+//			var PreparedStatement ps3  = conn.prepareStatement("SELECT * FROM Usuarios WHERE NOMBRE_USUARIO= 'PEPGOM'");
+//			var ResultSet rs = ps3.executeQuery();
+//			rs.next();
+//			var Integer validado = rs.getInt("VALIDADO");
+//			Assert.assertEquals(validado,1);
+//			return null;
+//			]
+//	}
 	
 		
 	@After

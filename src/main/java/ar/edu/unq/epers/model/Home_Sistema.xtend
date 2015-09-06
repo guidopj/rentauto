@@ -47,6 +47,7 @@ class Home_Sistema {
 				usuario.email = rs.getString("EMAIL");
 				usuario.fecha_de_nac = rs.getDate("FECHA_DE_NAC");
 				usuario.validado = rs.getBoolean("VALIDADO");
+				usuario.contrasena = rs.getString("CONTRASENA")
 				ps1.close();
 				return usuario;
 			}else{
@@ -55,7 +56,7 @@ class Home_Sistema {
 			}
 		])
 	}
-	//anadir campo pass a Ususarios
+	
 	def getUsuarioPorNombreUsuario(String nombreUsuario) {
 		this.queryDb([conn|
         	var PreparedStatement ps1  = conn.prepareStatement("SELECT * FROM  Usuarios where NOMBRE_USUARIO = ?");
@@ -84,27 +85,29 @@ class Home_Sistema {
 	
 	def actualizarUsuario(Usuario usuario){
 		this.updateDb([conn|
-			var String sql = "UPDATE Usuarios set NOMBRE=?, APELLIDO=?, EMAIL = ?, FECHA_DE_NAC = ?, VALIDADO = ? where NOMBRE_USUARIO=?";
+			var String sql = "UPDATE Usuarios set NOMBRE=?, APELLIDO=?, EMAIL = ?, FECHA_DE_NAC = ?, VALIDADO = ?, CONTRASENA = ? where NOMBRE_USUARIO=?";
 			val PreparedStatement ps1 = conn.prepareStatement(sql);
 			ps1.setString(1, usuario.nombre);
 			ps1.setString(2, usuario.apellido);
 			ps1.setString(3, usuario.email);
 			ps1.setDate(4, usuario.fecha_de_nac);
 			ps1.setBoolean(5,usuario.validado);
-			ps1.setString(6, usuario.nombre_de_usuario);
+			ps1.setString(6,usuario.contrasena);
+			ps1.setString(7, usuario.nombre_de_usuario);
 			ps1.execute();
 		])
 	}
 	
 	def guardarUsuario(Usuario usuario){
 		this.updateDb([conn|
-			val PreparedStatement ps1 = conn.prepareStatement("INSERT INTO Usuarios (NOMBRE, APELLIDO, NOMBRE_USUARIO, EMAIL, FECHA_DE_NAC, VALIDADO) VALUES(?,?,?,?,?,?)");
+			val PreparedStatement ps1 = conn.prepareStatement("INSERT INTO Usuarios (NOMBRE, APELLIDO, NOMBRE_USUARIO, EMAIL, FECHA_DE_NAC, VALIDADO,CONTRASENA) VALUES(?,?,?,?,?,?,?)");
 			ps1.setString(1, usuario.nombre);
 			ps1.setString(2, usuario.apellido);
 			ps1.setString(3, usuario.nombre_de_usuario);
 			ps1.setString(4, usuario.email);
 			ps1.setDate(5, usuario.fecha_de_nac);
 			ps1.setBoolean(6,false);
+			ps1.setString(7,usuario.contrasena);
 			ps1.execute();
 			
 			val cod_val = usuario.nombre_de_usuario + "1357"; 

@@ -6,6 +6,7 @@ import java.util.ArrayList
 import ar.edu.unq.epers.excepciones.UsuarioNoExisteException
 import java.sql.Date
 import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
+import ar.edu.unq.epers.excepciones.UsuarioNoValidadoException
 
 @Accessors 
 class Sistema {
@@ -45,10 +46,14 @@ class Sistema {
 		if(usuario == null){
 			throw new UsuarioNoExisteException();
 		}else{
-			if(usuario.contrasena == contr){
-				return usuario;
-			}else{
+			if(usuario.contrasena != contr){
 				throw new ContrasenaInvalidaException();
+			}else{
+				if(!usuario.validado){
+					throw new UsuarioNoValidadoException();
+				}else{
+					return usuario;
+				}
 			}
 		}
 	}
