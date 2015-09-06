@@ -5,6 +5,7 @@ import java.util.List
 import java.util.ArrayList
 import ar.edu.unq.epers.excepciones.UsuarioNoExisteException
 import java.sql.Date
+import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
 
 @Accessors 
 class Sistema {
@@ -22,8 +23,8 @@ class Sistema {
 	 de validación que se envía por mail.
 	*/
 	
-	def registrar(String NOMBRE, String APELLIDO, String NOMBRE_USUARIO, String EMAIL, Date FECHA_DE_NAC){
-		val Usuario usuario = new Usuario(NOMBRE, APELLIDO, NOMBRE_USUARIO, EMAIL, FECHA_DE_NAC);
+	def registrar(String NOMBRE, String APELLIDO, String NOMBRE_USUARIO, String EMAIL, Date FECHA_DE_NAC, String contrasena){
+		val Usuario usuario = new Usuario(NOMBRE, APELLIDO, NOMBRE_USUARIO, EMAIL, FECHA_DE_NAC,contrasena);
 		this.getListaUsuarios().add(usuario);
 		this.getHomeSistema().guardarUsuario(usuario);	
 	}
@@ -35,6 +36,34 @@ class Sistema {
 		}else{
 			usuario.validarme();
 			this.getHomeSistema().actualizarUsuario(usuario);
+		}
+	}
+	
+	
+	def ingresarUsuario(String nombreUsuario, String contr){
+		val Usuario usuario = this.getHomeSistema().getUsuarioPorNombreUsuario(nombreUsuario) as Usuario;
+		if(usuario == null){
+			throw new UsuarioNoExisteException();
+		}else{
+			if(usuario.contrasena == contr){
+				return usuario;
+			}else{
+				throw new ContrasenaInvalidaException();
+			}
+		}
+	}
+	
+	def cambiarContrasena(String nombreUsuario, String viejacontr, String nuevacontr){
+		val Usuario usuario = this.getHomeSistema().getUsuarioPorNombreUsuario(nombreUsuario) as Usuario;
+		if(usuario == null){
+			throw new UsuarioNoExisteException();
+		}else{
+			if(usuario.contrasena == viejacontr){
+				usuario.contrasena = nuevacontr;
+				this.getHomeSistema().actualizarUsuario(usuario);
+			}else{
+				throw new ContrasenaInvalidaException();
+			}
 		}
 	}
 }
