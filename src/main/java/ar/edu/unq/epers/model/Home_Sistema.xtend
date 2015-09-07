@@ -110,10 +110,10 @@ class Home_Sistema {
 			ps1.setString(7,usuario.contrasena);
 			ps1.execute();
 			
-			val cod_val = usuario.nombre_de_usuario + "1357"; 
+			//val cod_val = usuario.nombre_de_usuario + "1357";
 			val PreparedStatement ps2 = conn.prepareStatement("INSERT INTO Usuarios_Codigo_Validacion (NOMBRE_USUARIO, CODIGO_VALIDACION) VALUES(?,?)");
 			ps2.setString(1, usuario.nombre_de_usuario);
-			ps2.setString(2, cod_val);
+			ps2.setString(2, usuario.codigo_validacion);
 			
 			ps2.execute();
 		])

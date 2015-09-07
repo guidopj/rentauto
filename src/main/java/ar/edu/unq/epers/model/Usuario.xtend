@@ -12,6 +12,7 @@ class Usuario {
 	String email;
 	Date fecha_de_nac;
 	Boolean validado;
+	String codigo_validacion;
 	
 	new(String nombre, String apellido, String nombreUsuario, String email, Date fecha, String contrasena) {
 		this.nombre = nombre;
@@ -21,6 +22,7 @@ class Usuario {
 		this.fecha_de_nac = fecha;
 		this.contrasena = contrasena;
 		this.validado = false;
+		this.codigo_validacion = null;
 	}
 	
 	new(){}

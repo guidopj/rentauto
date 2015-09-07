@@ -9,14 +9,16 @@ import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
 import ar.edu.unq.epers.excepciones.UsuarioNoValidadoException
 
 @Accessors 
-class Sistema {
+class Sistema{
 	
-	List listaUsuarios;
+	//List listaUsuarios;
 	Home_Sistema homeSistema;
+	IEnviadorDeMails enviadorMail;
 	
 	new(){
-		this.listaUsuarios = new ArrayList<Usuario>();
+		//this.listaUsuarios = new ArrayList<Usuario>();
 		this.homeSistema = new Home_Sistema();
+		this.enviadorMail = new EnviadorMail();
 	}
 	
 	/*Como usuario quiero poder registrarme cargando mis datos y que quede registrado en el sistema. Cuando el 
@@ -26,8 +28,26 @@ class Sistema {
 	
 	def registrar(String NOMBRE, String APELLIDO, String NOMBRE_USUARIO, String EMAIL, Date FECHA_DE_NAC, String contrasena){
 		val Usuario usuario = new Usuario(NOMBRE, APELLIDO, NOMBRE_USUARIO, EMAIL, FECHA_DE_NAC,contrasena);
-		this.getListaUsuarios().add(usuario);
-		this.getHomeSistema().guardarUsuario(usuario);	
+		val cod_val = usuario.nombre_de_usuario + "1357";
+		
+		usuario.codigo_validacion = cod_val;
+		//this.getListaUsuarios().add(usuario);
+		
+		val Mail mail = this.crearMail(cod_val,usuario.email);
+		
+		this.enviadorMail.enviarMail(mail);
+		
+		this.getHomeSistema().guardarUsuario(usuario);
+	}
+	
+	def crearMail(String cod, String email){
+		val Mail mail = new Mail();
+		
+		mail.body = cod;
+		mail.subject = "codigo validacion";
+		mail.to = email;
+		mail.from = "rentauto";
+		return mail;
 	}
 	
 	def validarCuenta(String codigo){
@@ -71,4 +91,5 @@ class Sistema {
 			}
 		}
 	}
+	
 }
