@@ -23,8 +23,25 @@ class HomeSistema_Test {
 	@Test
 	def usuarioPorCodigoValidacionPEPITO(){
 		val Usuario u = homeSistema.getUsuarioPorCodigoValidacion("PEPGOM1357");
-		Assert.assertEquals("PEPITO",u.nombre);
 		Assert.assertEquals("PEPGOM",u.nombre_de_usuario);
+	}
+	
+	@Test
+	def usuarioPorCodigoValidacionPEPITOP_NoExiste(){
+		val Usuario u = homeSistema.getUsuarioPorCodigoValidacion("PEPPGOM1357");
+		Assert.assertNull(u);
+	}
+	
+	@Test
+	def usuarioPorNombreUsuarioPEPITO(){
+		val Usuario u = homeSistema.getUsuarioPorNombreUsuario("PEPGOM");
+		Assert.assertNotNull(u);
+	}
+	
+	@Test
+	def usuarioPorNombreUsuarioPEPITOP_NoExiste(){
+		val Usuario u = homeSistema.getUsuarioPorNombreUsuario("PEPPGOM");
+		Assert.assertNull(u);
 	}
 	
 	def private Connection getConnection(){

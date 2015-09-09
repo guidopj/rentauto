@@ -37,9 +37,6 @@ class Home_Sistema {
 			ps1.setString(1, cod);
 			var ResultSet rs = ps1.executeQuery();
 			if(rs.next()){
-//				val Usuario usuario = new Usuario => [
-//					nombre = rs.getString("NOMBRE");
-//				]
 				val Usuario usuario = new Usuario();
 				usuario.nombre = rs.getString("NOMBRE");
 				usuario.apellido = rs.getString("APELLIDO");
@@ -63,9 +60,6 @@ class Home_Sistema {
 			ps1.setString(1,nombreUsuario);
 			var ResultSet rs = ps1.executeQuery();
 			if(rs.next()){
-//				val Usuario usuario = new Usuario => [
-//					nombre = rs.getString("NOMBRE");
-//				]
 				val Usuario usuario = new Usuario();
 				usuario.nombre = rs.getString("NOMBRE");
 				usuario.apellido = rs.getString("APELLIDO");

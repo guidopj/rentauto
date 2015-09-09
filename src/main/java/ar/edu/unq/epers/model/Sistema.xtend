@@ -31,7 +31,6 @@ class Sistema{
 		val cod_val = usuario.nombre_de_usuario + "1357";
 		
 		usuario.codigo_validacion = cod_val;
-		//this.getListaUsuarios().add(usuario);
 		
 		val Mail mail = this.crearMail(cod_val,usuario.email);
 		
