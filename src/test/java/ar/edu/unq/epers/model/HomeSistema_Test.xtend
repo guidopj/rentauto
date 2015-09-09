@@ -10,37 +10,35 @@ import org.junit.After
 
 class HomeSistema_Test {
 	
-	Home_Sistema homeSistema;
 	Sistema sistema;
 	
 	@Before
 	def void setUp(){
-		homeSistema = new Home_Sistema();
 		sistema = new Sistema();
 		sistema.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",java.sql.Date.valueOf("2001-09-04"),"");
 	}
 	
 	@Test
 	def usuarioPorCodigoValidacionPEPITO(){
-		val Usuario u = homeSistema.getUsuarioPorCodigoValidacion("PEPGOM1357");
+		val Usuario u = sistema.homeSistema.getUsuarioPorCodigoValidacion("PEPGOM1357");
 		Assert.assertEquals("PEPGOM",u.nombre_de_usuario);
 	}
 	
 	@Test
 	def usuarioPorCodigoValidacionPEPITOP_NoExiste(){
-		val Usuario u = homeSistema.getUsuarioPorCodigoValidacion("PEPPGOM1357");
+		val Usuario u = sistema.homeSistema.getUsuarioPorCodigoValidacion("PEPPGOM1357");
 		Assert.assertNull(u);
 	}
 	
 	@Test
 	def usuarioPorNombreUsuarioPEPITO(){
-		val Usuario u = homeSistema.getUsuarioPorNombreUsuario("PEPGOM");
+		val Usuario u = sistema.homeSistema.getUsuarioPorNombreUsuario("PEPGOM");
 		Assert.assertNotNull(u);
 	}
 	
 	@Test
 	def usuarioPorNombreUsuarioPEPITOP_NoExiste(){
-		val Usuario u = homeSistema.getUsuarioPorNombreUsuario("PEPPGOM");
+		val Usuario u = sistema.homeSistema.getUsuarioPorNombreUsuario("PEPPGOM");
 		Assert.assertNull(u);
 	}
 	
