@@ -7,22 +7,22 @@ import java.sql.Date
 class Usuario {
 	String nombre;
 	String apellido;
-	String nombre_de_usuario;
+	String nombreDeUsuario;
 	String contrasena;
 	String email;
-	Date fecha_de_nac;
+	Date fechaDeNac;
 	Boolean validado;
-	String codigo_validacion;
+	String codigoValidacion;
 	
 	new(String nombre, String apellido, String nombreUsuario, String email, Date fecha, String contrasena) {
 		this.nombre = nombre;
 		this.apellido = apellido;
-		this.nombre_de_usuario = nombreUsuario;
+		this.nombreDeUsuario = nombreUsuario;
 		this.email = email;
-		this.fecha_de_nac = fecha;
+		this.fechaDeNac = fecha;
 		this.contrasena = contrasena;
 		this.validado = false;
-		this.codigo_validacion = null;
+		this.codigoValidacion = null;
 	}
 	
 	new(){}

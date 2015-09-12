@@ -10,18 +10,18 @@ import org.junit.After
 
 class HomeSistema_Test {
 	
-	Sistema sistema;
+	UsuarioService sistema;
 	
 	@Before
 	def void setUp(){
-		sistema = new Sistema();
+		sistema = new UsuarioService();
 		sistema.registrar("PEPITO","GOMEZ","PEPGOM","pepitoGomez@yahoo.com.ar",java.sql.Date.valueOf("2001-09-04"),"");
 	}
 	
 	@Test
 	def usuarioPorCodigoValidacionPEPITO(){
 		val Usuario u = sistema.homeSistema.getUsuarioPorCodigoValidacion("PEPGOM1357");
-		Assert.assertEquals("PEPGOM",u.nombre_de_usuario);
+		Assert.assertEquals("PEPGOM",u.nombreDeUsuario);
 	}
 	
 	@Test

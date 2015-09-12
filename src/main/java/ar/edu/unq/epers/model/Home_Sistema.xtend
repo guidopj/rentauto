@@ -40,9 +40,9 @@ class Home_Sistema {
 				val Usuario usuario = new Usuario();
 				usuario.nombre = rs.getString("NOMBRE");
 				usuario.apellido = rs.getString("APELLIDO");
-				usuario.nombre_de_usuario = rs.getString("NOMBRE_USUARIO");
+				usuario.nombreDeUsuario = rs.getString("NOMBRE_USUARIO");
 				usuario.email = rs.getString("EMAIL");
-				usuario.fecha_de_nac = rs.getDate("FECHA_DE_NAC");
+				usuario.fechaDeNac = rs.getDate("FECHA_DE_NAC");
 				usuario.validado = rs.getBoolean("VALIDADO");
 				usuario.contrasena = rs.getString("CONTRASENA")
 				ps1.close();
@@ -63,9 +63,9 @@ class Home_Sistema {
 				val Usuario usuario = new Usuario();
 				usuario.nombre = rs.getString("NOMBRE");
 				usuario.apellido = rs.getString("APELLIDO");
-				usuario.nombre_de_usuario = rs.getString("NOMBRE_USUARIO");
+				usuario.nombreDeUsuario = rs.getString("NOMBRE_USUARIO");
 				usuario.email = rs.getString("EMAIL");
-				usuario.fecha_de_nac = rs.getDate("FECHA_DE_NAC");
+				usuario.fechaDeNac = rs.getDate("FECHA_DE_NAC");
 				usuario.validado = rs.getBoolean("VALIDADO");
 				usuario.contrasena= rs.getString("CONTRASENA");
 				ps1.close();
@@ -84,10 +84,10 @@ class Home_Sistema {
 			ps1.setString(1, usuario.nombre);
 			ps1.setString(2, usuario.apellido);
 			ps1.setString(3, usuario.email);
-			ps1.setDate(4, usuario.fecha_de_nac);
+			ps1.setDate(4, usuario.fechaDeNac);
 			ps1.setBoolean(5,usuario.validado);
 			ps1.setString(6,usuario.contrasena);
-			ps1.setString(7, usuario.nombre_de_usuario);
+			ps1.setString(7, usuario.nombreDeUsuario);
 			ps1.execute();
 		])
 	}
@@ -97,17 +97,17 @@ class Home_Sistema {
 			val PreparedStatement ps1 = conn.prepareStatement("INSERT INTO Usuarios (NOMBRE, APELLIDO, NOMBRE_USUARIO, EMAIL, FECHA_DE_NAC, VALIDADO,CONTRASENA) VALUES(?,?,?,?,?,?,?)");
 			ps1.setString(1, usuario.nombre);
 			ps1.setString(2, usuario.apellido);
-			ps1.setString(3, usuario.nombre_de_usuario);
+			ps1.setString(3, usuario.nombreDeUsuario);
 			ps1.setString(4, usuario.email);
-			ps1.setDate(5, usuario.fecha_de_nac);
+			ps1.setDate(5, usuario.fechaDeNac);
 			ps1.setBoolean(6,false);
 			ps1.setString(7,usuario.contrasena);
 			ps1.execute();
 			
 			//val cod_val = usuario.nombre_de_usuario + "1357";
 			val PreparedStatement ps2 = conn.prepareStatement("INSERT INTO Usuarios_Codigo_Validacion (NOMBRE_USUARIO, CODIGO_VALIDACION) VALUES(?,?)");
-			ps2.setString(1, usuario.nombre_de_usuario);
-			ps2.setString(2, usuario.codigo_validacion);
+			ps2.setString(1, usuario.nombreDeUsuario);
+			ps2.setString(2, usuario.codigoValidacion);
 			
 			ps2.execute();
 		])
