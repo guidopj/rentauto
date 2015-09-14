@@ -2,6 +2,8 @@ package ar.edu.unq.epers.model
 
 import org.eclipse.xtend.lib.annotations.Accessors
 import java.sql.Date
+import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
+import ar.edu.unq.epers.excepciones.UsuarioNoValidadoException
 
 @Accessors
 class Usuario {
@@ -29,6 +31,18 @@ class Usuario {
 	
 	def validarme() {
 		this.validado = true;
+	}
+	
+	def validarConstrasena(String contrasena){
+		  if (contrasena != this.contrasena) {
+                 throw new ContrasenaInvalidaException()
+           }
+	}
+	
+	def validarIngreso() {
+    	if (!this.validado) {
+        	throw new UsuarioNoValidadoException;
+        }
 	}
 	
 }

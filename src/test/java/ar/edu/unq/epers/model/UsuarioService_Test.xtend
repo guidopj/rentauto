@@ -6,12 +6,17 @@ import org.junit.Assert
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.DriverManager
-import java.sql.ResultSet
 import org.junit.After
 import ar.edu.unq.epers.excepciones.UsuarioNoExisteException
 import java.sql.Date
 import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
 import ar.edu.unq.epers.excepciones.UsuarioNoValidadoException
+import ar.edu.unq.epers.services.UsuarioService
+import java.sql.SQLException
+import ar.edu.unq.epers.excepciones.ConexionFallidaException
+import ar.edu.unq.epers.mailing.IEnviadorDeMails
+import ar.edu.unq.epers.persistens.UsuarioHome
+import static org.mockito.Mockito.*;
 
 class UsuarioService_Test {
 	
@@ -29,9 +34,14 @@ class UsuarioService_Test {
 		return DriverManager.getConnection("jdbc:mysql://localhost/Pers_TP1?user=root&password=root");
 	}
 	
+	
+	/** 
+	 * TESTS CON ACCESO A DATOS
+	 * **/
+	 
 	@Test
 	def void registrar_pepito_Usuarios(){
-		val Usuario u = sis.homeSistema.getUsuarioPorNombreUsuario("PEPGOM");
+		val Usuario u = sis.getHomeUsuario().getUsuarioPorNombreUsuario("PEPGOM");
 		Assert.assertFalse(u.equals(null))
 		Assert.assertTrue(u.nombre.equals("PEPITO"));
 		Assert.assertEquals(false,u.validado);
@@ -40,13 +50,13 @@ class UsuarioService_Test {
 	@Test
 	def void registrar_pepito_Usuarios_CodigosVal(){
 		
-		val Usuario u = sis.homeSistema.getUsuarioPorNombreUsuario("PEPGOM");
+		val Usuario u = sis.getHomeUsuario().getUsuarioPorNombreUsuario("PEPGOM");
 		Assert.assertNotNull(u);
 	}
 	
 	@Test
 	def void registrar_pepitoP_Usuarios_CodigosVal(){
-		val Usuario u = sis.homeSistema.getUsuarioPorNombreUsuario("PEPPGOM");
+		val Usuario u = sis.getHomeUsuario().getUsuarioPorNombreUsuario("PEPPGOM");
 		Assert.assertNull(u)
 	}
 	
@@ -54,7 +64,7 @@ class UsuarioService_Test {
 	def void validar_PEPITO_existe(){
 		sis.validarCuenta("PEPGOM1357");
 
-		val Usuario u = sis.homeSistema.getUsuarioPorNombreUsuario("PEPGOM");
+		val Usuario u = sis.getHomeUsuario().getUsuarioPorNombreUsuario("PEPGOM");
 		Assert.assertTrue(u.validado);
 	}
 	
@@ -85,7 +95,7 @@ class UsuarioService_Test {
 	@Test
 	def void cambiarContrasenaCorrecto(){
 		sis.cambiarContrasena("PEPGOM", "aaa", "nuevaAAA");
-		val Usuario u = sis.homeSistema.getUsuarioPorNombreUsuario("PEPGOM");
+		val Usuario u = sis.getHomeUsuario().getUsuarioPorNombreUsuario("PEPGOM");
 		Assert.assertEquals("nuevaAAA",u.contrasena);
 	}
 	
@@ -94,6 +104,66 @@ class UsuarioService_Test {
 		sis.cambiarContrasena("PEPGOM", "viejaAAAAAA", "nuevaAAA");
 	}
 	
+	
+	
+	 /**
+	 * TEST DE MODELO Y NEGOCIO MOCKEANDO ACCESO A DATOS
+	 * **/
+	 
+	@Test
+    def void siElUsuarioExisteIngreso() {
+        val user = new Usuario()
+        user.nombre = "Pepito"
+        user.apellido = "Gomez"
+        user.nombreDeUsuario = "PEPGOM"
+        user.contrasena = "BLA"
+		user.fechaDeNac = java.sql.Date.valueOf("2001-09-04");
+		user.validado = true;
+		
+        sis.homeUsuario = mock(UsuarioHome)
+        sis.enviadorMail = mock(IEnviadorDeMails)
+        
+        when(sis.homeUsuario.getUsuarioPorNombreUsuario("PEPGOM")).thenReturn(user)
+        
+        val Usuario usuarioLogueado = sis.ingresarUsuario("PEPGOM", "BLA")
+        Assert.assertEquals(usuarioLogueado, user)
+	}
+	
+	@Test(expected=ContrasenaInvalidaException)
+    def void testContrasenaInvalida() {
+        val user = new Usuario()
+        user.nombre = "Pepito"
+        user.apellido = "Gomez"
+        user.nombreDeUsuario = "PEPGOM"
+        user.contrasena = "BLA"
+		user.fechaDeNac = java.sql.Date.valueOf("2001-09-04");
+		user.validado = true;
+		
+        sis.homeUsuario = mock(UsuarioHome)
+        sis.enviadorMail = mock(IEnviadorDeMails)
+        
+        when(sis.homeUsuario.getUsuarioPorNombreUsuario("PEPGOM")).thenReturn(user)
+        
+        val Usuario usuarioLogueado = sis.ingresarUsuario("PEPGOM", "BLAH!")
+	}
+	
+	@Test(expected=UsuarioNoValidadoException)
+    def void testUsuarioNoValidado() {
+        val user = new Usuario()
+        user.nombre = "Pepito"
+        user.apellido = "Gomez"
+        user.nombreDeUsuario = "PEPGOM"
+        user.contrasena = "BLA"
+		user.fechaDeNac = java.sql.Date.valueOf("2001-09-04");
+		user.validado = false;
+		
+        sis.homeUsuario = mock(UsuarioHome)
+        sis.enviadorMail = mock(IEnviadorDeMails)
+        
+        when(sis.homeUsuario.getUsuarioPorNombreUsuario("PEPGOM")).thenReturn(user)
+        
+        val Usuario usuarioLogueado = sis.ingresarUsuario("PEPGOM", "BLA");
+	}
 		
 	@After
 	def void tearDown(){
@@ -108,6 +178,8 @@ class UsuarioService_Test {
 			ps1.execute();
 			ps2.execute();
 		
+		}catch(SQLException e){
+			throw new ConexionFallidaException();	
 		}finally{
 			if(ps1 != null)
 				ps1.close();

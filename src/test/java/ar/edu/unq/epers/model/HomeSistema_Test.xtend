@@ -7,6 +7,9 @@ import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.DriverManager
 import org.junit.After
+import ar.edu.unq.epers.services.UsuarioService
+import java.sql.SQLException
+import ar.edu.unq.epers.excepciones.ConexionFallidaException
 
 class HomeSistema_Test {
 	
@@ -20,25 +23,25 @@ class HomeSistema_Test {
 	
 	@Test
 	def usuarioPorCodigoValidacionPEPITO(){
-		val Usuario u = sistema.homeSistema.getUsuarioPorCodigoValidacion("PEPGOM1357");
+		val Usuario u = sistema.getHomeUsuario().getUsuarioPorCodigoValidacion("PEPGOM1357");
 		Assert.assertEquals("PEPGOM",u.nombreDeUsuario);
 	}
 	
 	@Test
 	def usuarioPorCodigoValidacionPEPITOP_NoExiste(){
-		val Usuario u = sistema.homeSistema.getUsuarioPorCodigoValidacion("PEPPGOM1357");
+		val Usuario u = sistema.getHomeUsuario().getUsuarioPorCodigoValidacion("PEPPGOM1357");
 		Assert.assertNull(u);
 	}
 	
 	@Test
 	def usuarioPorNombreUsuarioPEPITO(){
-		val Usuario u = sistema.homeSistema.getUsuarioPorNombreUsuario("PEPGOM");
+		val Usuario u = sistema.getHomeUsuario().getUsuarioPorNombreUsuario("PEPGOM");
 		Assert.assertNotNull(u);
 	}
 	
 	@Test
 	def usuarioPorNombreUsuarioPEPITOP_NoExiste(){
-		val Usuario u = sistema.homeSistema.getUsuarioPorNombreUsuario("PEPPGOM");
+		val Usuario u = sistema.getHomeUsuario().getUsuarioPorNombreUsuario("PEPPGOM");
 		Assert.assertNull(u);
 	}
 	
@@ -60,6 +63,8 @@ class HomeSistema_Test {
 			ps1.execute();
 			ps2.execute();
 		
+		}catch(SQLException e){
+			throw new ConexionFallidaException();
 		}finally{
 			if(ps1 != null)
 				ps1.close();

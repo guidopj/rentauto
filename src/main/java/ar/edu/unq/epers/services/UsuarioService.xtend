@@ -1,28 +1,23 @@
 package ar.edu.unq.epers.services
 
 import org.eclipse.xtend.lib.annotations.Accessors
-import java.util.List
-import java.util.ArrayList
 import ar.edu.unq.epers.excepciones.UsuarioNoExisteException
 import java.sql.Date
 import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
-import ar.edu.unq.epers.excepciones.UsuarioNoValidadoException
-import ar.edu.unq.epers.persistens.Home_Sistema
 import ar.edu.unq.epers.mailing.IEnviadorDeMails
 import ar.edu.unq.epers.mailing.EnviadorMail
 import ar.edu.unq.epers.mailing.Mail
 import ar.edu.unq.epers.model.Usuario
+import ar.edu.unq.epers.persistens.UsuarioHome
 
 @Accessors 
 class UsuarioService{
 	
-	//List listaUsuarios;
-	Home_Sistema homeSistema;
+	UsuarioHome homeUsuario;
 	IEnviadorDeMails enviadorMail;
 	
 	new(){
-		//this.listaUsuarios = new ArrayList<Usuario>();
-		this.homeSistema = new Home_Sistema();
+		this.homeUsuario = new UsuarioHome();
 		this.enviadorMail = new EnviadorMail();
 	}
 	
@@ -42,7 +37,7 @@ class UsuarioService{
 		
 		this.enviadorMail.enviarMail(mail);
 		
-		this.getHomeSistema().guardarUsuario(usuario);
+		this.getHomeUsuario().guardarUsuario(usuario);
 	}
 	
 	def private crearMail(String cod, String email){
@@ -56,41 +51,35 @@ class UsuarioService{
 	}
 	
 	def validarCuenta(String codigo){
-		val Usuario usuario = this.getHomeSistema().getUsuarioPorCodigoValidacion(codigo);
+		val Usuario usuario = this.getHomeUsuario().getUsuarioPorCodigoValidacion(codigo);
 		if(usuario == null){
 			throw new UsuarioNoExisteException();
 		}else{
 			usuario.validarme();
-			this.getHomeSistema().actualizarUsuario(usuario);
+			this.getHomeUsuario().actualizarUsuario(usuario);
 		}
 	}
 	
 	
 	def ingresarUsuario(String nombreUsuario, String contr){
-		val Usuario usuario = this.getHomeSistema().getUsuarioPorNombreUsuario(nombreUsuario);
+		val Usuario usuario = this.getHomeUsuario().getUsuarioPorNombreUsuario(nombreUsuario);
 		if(usuario == null){
 			throw new UsuarioNoExisteException();
 		}else{
-			if(usuario.contrasena != contr){
-				throw new ContrasenaInvalidaException();
-			}else{
-				if(!usuario.validado){
-					throw new UsuarioNoValidadoException();
-				}else{
-					return usuario;
-				}
-			}
+			usuario.validarConstrasena(contr)
+       		usuario.validarIngreso()
+       		return usuario
 		}
 	}
 	
 	def cambiarContrasena(String nombreUsuario, String viejacontr, String nuevacontr){
-		val Usuario usuario = this.getHomeSistema().getUsuarioPorNombreUsuario(nombreUsuario);
+		val Usuario usuario = this.getHomeUsuario().getUsuarioPorNombreUsuario(nombreUsuario);
 		if(usuario == null){
 			throw new UsuarioNoExisteException();
 		}else{
 			if(usuario.contrasena == viejacontr){
 				usuario.contrasena = nuevacontr;
-				this.getHomeSistema().actualizarUsuario(usuario);
+				this.getHomeUsuario().actualizarUsuario(usuario);
 			}else{
 				throw new ContrasenaInvalidaException();
 			}
