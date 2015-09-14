@@ -1,4 +1,4 @@
-package ar.edu.unq.epers.model
+package ar.edu.unq.epers.services
 
 import org.eclipse.xtend.lib.annotations.Accessors
 import java.util.List
@@ -7,9 +7,14 @@ import ar.edu.unq.epers.excepciones.UsuarioNoExisteException
 import java.sql.Date
 import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
 import ar.edu.unq.epers.excepciones.UsuarioNoValidadoException
+import ar.edu.unq.epers.persistens.Home_Sistema
+import ar.edu.unq.epers.mailing.IEnviadorDeMails
+import ar.edu.unq.epers.mailing.EnviadorMail
+import ar.edu.unq.epers.mailing.Mail
+import ar.edu.unq.epers.model.Usuario
 
 @Accessors 
-class Sistema{
+class UsuarioService{
 	
 	//List listaUsuarios;
 	Home_Sistema homeSistema;
@@ -21,25 +26,26 @@ class Sistema{
 		this.enviadorMail = new EnviadorMail();
 	}
 	
-	/*Como usuario quiero poder registrarme cargando mis datos y que quede registrado en el sistema. Cuando el 
-	usuario se registra debe enviar un mail al usuario para validar su cuenta. Para eso debe generarse un código
-	 de validación que se envía por mail.
+	/**
+	 * Como usuario quiero poder registrarme cargando mis datos y que quede registrado en el sistema. Cuando el 
+	   usuario se registra debe enviar un mail al usuario para validar su cuenta. Para eso debe generarse un código
+	   de validación que se envía por mail.
 	*/
 	
-	def registrar(String NOMBRE, String APELLIDO, String NOMBRE_USUARIO, String EMAIL, Date FECHA_DE_NAC, String contrasena){
-		val Usuario usuario = new Usuario(NOMBRE, APELLIDO, NOMBRE_USUARIO, EMAIL, FECHA_DE_NAC,contrasena);
-		val cod_val = usuario.nombre_de_usuario + "1357";
+	def registrar(String nombre, String apellido, String nombreUsuario, String email, Date fechaDeNac, String contrasena){
+		val Usuario usuario = new Usuario(nombre, apellido, nombreUsuario, email, fechaDeNac,contrasena);
+		val codVal = usuario.nombreDeUsuario + "1357";
 		
-		usuario.codigo_validacion = cod_val;
+		usuario.codigoValidacion = codVal;
 		
-		val Mail mail = this.crearMail(cod_val,usuario.email);
+		val Mail mail = this.crearMail(codVal,usuario.email);
 		
 		this.enviadorMail.enviarMail(mail);
 		
 		this.getHomeSistema().guardarUsuario(usuario);
 	}
 	
-	def crearMail(String cod, String email){
+	def private crearMail(String cod, String email){
 		val Mail mail = new Mail();
 		
 		mail.body = cod;
@@ -50,7 +56,7 @@ class Sistema{
 	}
 	
 	def validarCuenta(String codigo){
-		val Usuario usuario = this.getHomeSistema().getUsuarioPorCodigoValidacion(codigo) as Usuario;
+		val Usuario usuario = this.getHomeSistema().getUsuarioPorCodigoValidacion(codigo);
 		if(usuario == null){
 			throw new UsuarioNoExisteException();
 		}else{
@@ -61,7 +67,7 @@ class Sistema{
 	
 	
 	def ingresarUsuario(String nombreUsuario, String contr){
-		val Usuario usuario = this.getHomeSistema().getUsuarioPorNombreUsuario(nombreUsuario) as Usuario;
+		val Usuario usuario = this.getHomeSistema().getUsuarioPorNombreUsuario(nombreUsuario);
 		if(usuario == null){
 			throw new UsuarioNoExisteException();
 		}else{
@@ -78,7 +84,7 @@ class Sistema{
 	}
 	
 	def cambiarContrasena(String nombreUsuario, String viejacontr, String nuevacontr){
-		val Usuario usuario = this.getHomeSistema().getUsuarioPorNombreUsuario(nombreUsuario) as Usuario;
+		val Usuario usuario = this.getHomeSistema().getUsuarioPorNombreUsuario(nombreUsuario);
 		if(usuario == null){
 			throw new UsuarioNoExisteException();
 		}else{

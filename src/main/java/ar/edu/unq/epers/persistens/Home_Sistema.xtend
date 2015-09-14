@@ -1,10 +1,11 @@
-package ar.edu.unq.epers.model
+package ar.edu.unq.epers.persistens
 
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import org.eclipse.xtext.xbase.lib.Functions.Function1
+import ar.edu.unq.epers.model.Usuario
 
 class Home_Sistema {
 	

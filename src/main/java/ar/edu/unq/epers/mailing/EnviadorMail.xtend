@@ -1,4 +1,5 @@
-package ar.edu.unq.epers.model
+package ar.edu.unq.epers.mailing
+
 
 class EnviadorMail implements IEnviadorDeMails{
 	
