@@ -16,12 +16,13 @@ class AutoService_Test {
 	def void startUp(){
 		autoH = new AutoHome
 		autoS = new AutoService(autoH)
-		autoS.anadirAuto("Fiat","Uno",1999,"ABC123",new Double(1000))
+		autoS.anadirAuto("Fiat","Uno",1999,"ABC123",new Turismo(),new Double(1000),new Ubicacion("Retiro"))
 	}
-
+	
 	@Test
-	def consultar() {
-		var Auto auto = autoS.autoHome.get(1)
+	def consultarFiatUno() {
+		var Auto auto = autoS.getAuto(1)
 		Assert.assertEquals("ABC123", auto.patente);
 	}
+	
 }

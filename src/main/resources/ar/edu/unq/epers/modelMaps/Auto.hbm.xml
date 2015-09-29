@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/hibernate-mapping-3.0.dtd">
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
     <class name="ar.edu.unq.epers.model.Auto" table="Autos" >
@@ -16,23 +16,21 @@
         <property name="modelo" type="string">
             <column name="modelo" length="20" not-null="false" unique="false" />
         </property>
-        <property name="anio" type="Integer">
+        <property name="anio" type="java.lang.Integer">
             <column  name="anio" not-null="false" unique="false"/>
         </property>
         <property name="patente" type="string">
-            <column  name="string" not-null="false" unique="true"/>
+            <column  name="patente" not-null="false" unique="true"/>
         </property>
         
-        <property name="costoBase" type="Double">
-            <column  name="costo base" not-null="false" unique="false"/>
+        <property name="costoBase" type="java.lang.Double">
+            <column  name="costo_base" not-null="false" unique="false"/>
         </property>
+        
+		<many-to-one name="categoria" column="categoria" not-null="true" 
+		unique="true" cascade="all"></many-to-one>
+		
+		<many-to-one name="ubicacionInicial" column="ubicacion_inicial" not-null="true" 
+		unique="true" cascade="all"></many-to-one>
     </class>
 </hibernate-mapping>
-
-<!-- Integer id
-	String marca
-	String modelo
-	Integer anio
-	String patente
-	Double costoBase
-	Categoria categoria -->

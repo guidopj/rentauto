@@ -9,8 +9,8 @@ class AutoHome {
 			SessionManager.getSession().save(auto)
 	}
 	
-	def get(int id){
-			return SessionManager.getSession().get(typeof(Auto) ,id) as Auto
+	def obtenerAuto(int id) {
+		return SessionManager.getSession().get(typeof(Auto) ,id) as Auto	
 	}
 	
 }

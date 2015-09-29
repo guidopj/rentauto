@@ -35,6 +35,8 @@ class Auto {
 		this.patente = patente
 		this.costoBase = costoBase
 	}
+	
+	new(){}
 
 	def getUbicacion(){
 		this.ubicacionParaDia(new Date());
