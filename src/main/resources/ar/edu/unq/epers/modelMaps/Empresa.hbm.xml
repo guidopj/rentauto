@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="ar.edu.unq.epers.model.Auto" table="Autos" >
+    
+        <id name="id" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+
+        <property name="cuit" type="string">
+            <column name="cuit" length="20" not-null="false" unique="false" />
+        </property>
+        <property name="nombreEmpresa" type="string">
+            <column name="nombre_empresa" length="20" not-null="false" unique="false" />
+        </property>
+        
+        <bag name="reservas" cascade="save-update" inverse="true">
+		<key column="id" />
+    		<one-to-many class="ar.edu.unq.epers.model.Reserva" />
+    	</bag>
+    </class>
+</hibernate-mapping>
+
+<!-- String cuit, String nombreEmpresa,List<Reserva> reservas -->

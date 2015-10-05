@@ -32,5 +32,11 @@
 		
 		<many-to-one name="ubicacionInicial" column="ubicacion_inicial" not-null="true" 
 		unique="true" cascade="all"></many-to-one>
+		
+		<list name="reservas" cascade="save-update" inverse="true">
+			<key column="id" />
+			<list-index column="id"/>
+    		<one-to-many class="ar.edu.unq.epers.model.Reserva" />
+    	</list>
     </class>
 </hibernate-mapping>

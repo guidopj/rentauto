@@ -15,6 +15,14 @@ class Empresa {
 	Double valorMaximoPorDia
 	List<Categoria> categoriasAdmitidas = newArrayList
 	
+	new(){}
+	
+	new(String cuit, String nombreEmpresa,List<Reserva> reservas){
+		this.cuit = cuit
+		this.nombreEmpresa = nombreEmpresa
+		this.reservas = reservas
+	}
+	
 	def agregarReserva(Reserva unaReserva){
 		unaReserva.validarReserva
 		reservas.add(unaReserva)

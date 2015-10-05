@@ -15,6 +15,17 @@ class Reserva {
 	Date fin
 	Auto auto
 	IUsuario usuario
+	
+	new(){}
+	
+	new(Auto auto,Ubicacion origen,Ubicacion destino,Date inicio,Date fin){
+		this.auto = auto
+		this.origen = origen
+		this.destino = destino
+		this.inicio = inicio
+		this.fin = fin
+	}
+	
 
 	def costo() {
 		val cantidadDeDias = Days.daysBetween(new DateTime(inicio), new DateTime(fin)).days
