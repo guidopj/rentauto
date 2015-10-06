@@ -35,7 +35,7 @@
 		
 		<list name="reservas" cascade="save-update" inverse="true">
 			<key column="id" />
-			<list-index column="id"/>
+			<list-index column="reserva_index"/>
     		<one-to-many class="ar.edu.unq.epers.model.Reserva" />
     	</list>
     </class>

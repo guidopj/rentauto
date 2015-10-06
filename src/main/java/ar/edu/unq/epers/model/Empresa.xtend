@@ -5,6 +5,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 
 @Accessors 
 class Empresa {
+	Integer id_empresa
 	String cuit
 	String nombreEmpresa
 	

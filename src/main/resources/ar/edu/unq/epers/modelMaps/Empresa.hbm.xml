@@ -3,9 +3,9 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
  
 <hibernate-mapping>
-    <class name="ar.edu.unq.epers.model.Auto" table="Autos" >
+    <class name="ar.edu.unq.epers.model.Empresa" table="Empresas" >
     
-        <id name="id" type="java.lang.Integer">
+        <id name="id_empresa" type="java.lang.Integer">
             <column name="ID" />
             <generator class="identity" />
         </id>
@@ -17,8 +17,8 @@
             <column name="nombre_empresa" length="20" not-null="false" unique="false" />
         </property>
         
-        <bag name="reservas" cascade="save-update" inverse="true">
-		<key column="id" />
+        <bag name="reservas" cascade="save-update">
+		<key column="id_empresa" />
     		<one-to-many class="ar.edu.unq.epers.model.Reserva" />
     	</bag>
     </class>

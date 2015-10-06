@@ -19,6 +19,13 @@ class SessionManager {
 		sessionFactory;
 	}
 	
+	def synchronized static resetSessionFactory() {
+        if (sessionFactory != null) {
+            sessionFactory.close();
+            sessionFactory = null;
+        }
+    }
+	
 	def static <T> T runInSession(Function0<T> cmd){
 		var sessionFactory = SessionManager.getSessionFactory();
 		var Transaction transaction = null;

@@ -19,9 +19,9 @@
 		<many-to-one name="destino" column="ubicacion_destino" not-null="true" 
 		unique="false" cascade="all"></many-to-one>
 		
-		<property name="inicio" type="DATE" column="fecha_inicio"/>
+		<property name="inicio" column="fecha_inicio"/>
 		
-		<property name="fin" type="DATE" column="fecha_fin"/>
+		<property name="fin" column="fecha_fin"/>
     </class>
 </hibernate-mapping>
 
