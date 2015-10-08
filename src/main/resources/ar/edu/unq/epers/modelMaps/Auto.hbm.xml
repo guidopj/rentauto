@@ -31,10 +31,10 @@
 		unique="true" cascade="all"></many-to-one>
 		
 		<many-to-one name="ubicacionInicial" column="ubicacion_inicial" not-null="true" 
-		unique="true" cascade="all"></many-to-one>
+		cascade="all"></many-to-one>
 		
-		<list name="reservas" cascade="save-update" inverse="true">
-			<key column="id" />
+		<list name="reservas" cascade="save-update">
+			<key column="numeroSolicitud" />
 			<list-index column="reserva_index"/>
     		<one-to-many class="ar.edu.unq.epers.model.Reserva" />
     	</list>

@@ -4,9 +4,10 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import java.sql.Date
 import ar.edu.unq.epers.excepciones.ContrasenaInvalidaException
 import ar.edu.unq.epers.excepciones.UsuarioNoValidadoException
+import java.util.List
 
 @Accessors
-class Usuario {
+class Usuario implements IUsuario{
 	String nombre;
 	String apellido;
 	String nombreDeUsuario;
@@ -15,6 +16,7 @@ class Usuario {
 	Date fechaDeNac;
 	Boolean validado;
 	String codigoValidacion;
+	List<Reserva> reservas = newArrayList
 	
 	new(String nombre, String apellido, String nombreUsuario, String email, Date fecha, String contrasena) {
 		this.nombre = nombre;
@@ -43,6 +45,14 @@ class Usuario {
     	if (!this.validado) {
         	throw new UsuarioNoValidadoException;
         }
+	}
+	
+	override agregarReserva(Reserva unaReserva) {
+		this.reservas.add(unaReserva)
+	}
+	
+	override getReservas() {
+		reservas
 	}
 	
 }

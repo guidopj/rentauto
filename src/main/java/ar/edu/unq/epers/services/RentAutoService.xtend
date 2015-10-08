@@ -5,11 +5,11 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import ar.edu.unq.epers.sesiones.SessionManager
 import ar.edu.unq.epers.model.Ubicacion
 import java.util.Date
-import ar.edu.unq.epers.model.Empresa
 import ar.edu.unq.epers.model.Reserva
 import java.util.List
 import ar.edu.unq.epers.model.Auto
 import java.util.ArrayList
+import org.eclipse.xtext.xbase.lib.Functions.Function0
 import ar.edu.unq.epers.model.Categoria
 
 @Accessors
@@ -21,21 +21,20 @@ class RentAutoService {
 		this.autoHome = autoH
 	}
 	
-//	def anadirAuto(String marca, String modelo, Integer anio, String patente, Categoria categoria,Double costoBase, Ubicacion ubicacionInicial){
-//		SessionManager.runInSession([
-//			val Auto auto = new Auto(marca, modelo, anio, patente,categoria,costoBase,ubicacionInicial);
-//			this.autoHome.guardarAuto(auto);
-//		]);
-//	}
-
-	def anadirEmpresa(Empresa empresa){
+	def <T> ejecutarBloque(Function0< T> bloque) {
 		SessionManager.runInSession([
-			this.autoHome.guardar(empresa);
+			bloque.apply();
+		]);
+	}
+
+	def <T> anadir(T element){
+		this.ejecutarBloque([|
+			this.autoHome.guardar(element);
 		]);
 	}
 	
 	def getAuto(int id){
-		SessionManager.runInSession([
+		this.ejecutarBloque([|
 			this.autoHome.obtenerAuto(id);
 		]);
 	}
@@ -44,45 +43,83 @@ class RentAutoService {
 		u.nombre.equals(u1.nombre)
 	}
 	
-	def private tieneReservaEn(Auto a, Date fecha){
+	
+	def private tieneReservaDesdeInicio(Auto a, Date fecha){
 		for(Reserva r : a.reservas){
-			if(r.inicio.before(fecha) && r.fin.after(fecha)){
+			if(r.inicio.after(fecha)){
 				return true
 			}
 		}
 		false
 	}
 	
-	def obtenerAutosDisponibles(Ubicacion ubicacion, Date fecha) {
-		SessionManager.runInSession([
+	def private tieneReservaHastaFin(Auto a, Date fecha){
+		for(Reserva r : a.reservas){
+			if(r.fin.before(fecha)){
+				return true
+			}
+		}
+		false
+	}
+	
+//	def obtenerAutosDisponibles(Ubicacion ubicacion, Date fecha) {
+//		this.ejecutarBloque([|
+//			var List<Auto> autosDisponibles = new ArrayList<Auto>
+//			var List<Auto> autos = this.autoHome.obtenerAutos()
+//			for(Auto a : autos){
+//				if(esMismaUbicacion(a.ubicacionInicial,ubicacion) && !tieneReservaEn(a,fecha)){
+//					autosDisponibles.add(a)
+//				}
+//			}
+//			autosDisponibles 
+//		]);
+//	}
+	
+	
+	def obtenerAutosDisponibles(Ubicacion origen,Date inicio,Date fin,Categoria cat) {
+		this.ejecutarBloque([|
 			var List<Auto> autosDisponibles = new ArrayList<Auto>
-			var List<Auto> autos = this.autoHome.obtenerAutos(ubicacion,fecha)
+			var List<Auto> autos = this.autoHome.obtenerAutos()
 			for(Auto a : autos){
-				if(esMismaUbicacion(a.ubicacionInicial,ubicacion) && !tieneReservaEn(a,fecha)){
+				if(satisfaceFiltro(a,origen,inicio,fin,cat)){
 					autosDisponibles.add(a)
 				}
 			}
-			autosDisponibles
+			autosDisponibles 
 		]);
 	}
 	
-	def obtenerAutosDisponiblesDe(Ubicacion ubicacionOrigen, Ubicacion ubicacionDestino,Date fecha,Date fin,Categoria categoria) {
-		SessionManager.runInSession([
-			var List<Auto> autosDisponibles = new ArrayList<Auto>
-			var List<Auto> autos = this.autoHome.obtenerAutos(ubicacionOrigen,fecha)
-			for(Auto a : autos){
-				if(esMismaUbicacion(a.ubicacionInicial,ubicacionOrigen) && !tieneReservaEn(a,fecha)){
-					autosDisponibles.add(a)
-				}
-			}
-			autosDisponibles as List<Auto>
+	def satisfaceFiltro(Auto auto,Ubicacion origen, Date inicio, Date fin, Categoria categoria) {
+		var boolRes = true
+		if(origen != null){
+			boolRes = boolRes && esMismaUbicacion(origen,auto.ubicacionInicial)
+		}
+		if(inicio != null){
+			boolRes = boolRes && tieneReservaDesdeInicio(auto,inicio)
+		}
+		if(fin != null){
+			boolRes = boolRes && tieneReservaHastaFin(auto,fin)
+		}
+		if(categoria != null){
+			boolRes = boolRes && tieneMismaCategoria(auto,categoria)
+		}
+		boolRes
+	}
+	
+	def tieneMismaCategoria(Auto auto, Categoria categoria) {
+		auto.categoria.nombre.equals(categoria.nombre)
+	}
+	
+	def obtenerTotalAutos() {
+		this.ejecutarBloque([|
+			return this.autoHome.obtenerAutos()
 		]);
 	}
 	
 	def realizarReserva(Reserva reservaNueva) {
 		//Auto auto,Ubicacion origen,Ubicacion destino,Date inicio,Date fin
 		reservaNueva.reservar()
-		this.autoHome.guardar(reservaNueva)
+		this.anadir(reservaNueva)
 	}
 	
 }

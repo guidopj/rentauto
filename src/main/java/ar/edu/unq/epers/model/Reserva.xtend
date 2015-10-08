@@ -18,12 +18,13 @@ class Reserva {
 	
 	new(){}
 	
-	new(Auto auto,Ubicacion origen,Ubicacion destino,Date inicio,Date fin){
+	new(Auto auto,Ubicacion origen,Ubicacion destino,Date inicio,Date fin,IUsuario usuario){
 		this.auto = auto
 		this.origen = origen
 		this.destino = destino
 		this.inicio = inicio
 		this.fin = fin
+		this.usuario = usuario
 	}
 	
 
@@ -35,8 +36,9 @@ class Reserva {
 	def void validar(){
 		val ubicacionInicial = auto.ubicacionParaDia(inicio)
 		
-		if(ubicacionInicial != origen)
+		if(ubicacionInicial != origen){
 			throw new ReservaException("El auto no tiene la ubicación de origen buscada")
+		}
 		
 		if(!auto.estaLibre(inicio, fin))
 			throw new ReservaException("El auto no esta libre en el periodo pedido")

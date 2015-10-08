@@ -4,7 +4,7 @@ import java.util.List
 import org.eclipse.xtend.lib.annotations.Accessors
 
 @Accessors 
-class Empresa {
+class Empresa implements IUsuario{
 	Integer id_empresa
 	String cuit
 	String nombreEmpresa
@@ -22,14 +22,17 @@ class Empresa {
 		this.cuit = cuit
 		this.nombreEmpresa = nombreEmpresa
 		this.reservas = reservas
+		this.cantidadMaximaDeReservasActivas = 2
+		this.valorMaximoPorDia = new Double(100)
 	}
 	
-	def agregarReserva(Reserva unaReserva){
+	override agregarReserva(Reserva unaReserva){
 		unaReserva.validarReserva
 		reservas.add(unaReserva)
 	}
 	
 	def validarReserva(Reserva unaReserva){
+		System.out.println("reserevas activas size = "+ reservasActivas.size + " y cantMax = " + cantidadMaximaDeReservasActivas)
 		if(reservasActivas.size == cantidadMaximaDeReservasActivas )
 			throw new ReservaException("No se pueden tener más reservas para esta empresa")
 		if(unaReserva.costoPorDia > valorMaximoPorDia)

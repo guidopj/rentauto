@@ -6,6 +6,7 @@ import ar.edu.unq.epers.model.Ubicacion
 import java.util.Date
 import org.hibernate.Query
 import java.util.List
+import ar.edu.unq.epers.model.Categoria
 
 class AutoHome {
 	
@@ -21,15 +22,18 @@ class AutoHome {
 		return SessionManager.getSession().get(typeof(Auto) ,id) as Auto	
 	}
 	
-	def obtenerAutos(Ubicacion ubicacion, Date date) {
+	def obtenerAutos() {
 		var Query q = SessionManager.getSession().createQuery("from Auto");
 		var List<Auto> todos = q.list();
 		//q.setInteger("mod", 2008)
 		return todos as List<Auto>
 	}
 	
-//	def guardarEmpresa(Empresa empresa) {
-//		SessionManager.getSession().save(empresa)
-//	}
-	
+	def obtenerAutosPorCategoria(Categoria categoria) {
+		var Query q = SessionManager.getSession().createQuery("from Auto as auto where auto.categoria.nombre = :cat")
+		 q.setString("cat", categoria.nombre)
+		var List<Auto> todos = q.list();
+		//q.setInteger("mod", 2008)
+		return todos as List<Auto>
+	}
 }

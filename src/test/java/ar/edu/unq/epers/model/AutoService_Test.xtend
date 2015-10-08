@@ -11,10 +11,11 @@ import java.util.ArrayList
 import ar.edu.unq.epers.services.RentAutoService
 import org.junit.After
 import ar.edu.unq.epers.sesiones.SessionManager
-import org.hibernate.SessionFactory
+import static ar.edu.unq.epers.extensions.DateExtensions.*
 
-class AutoService_Test {
+class AutoService_Test{
 	
+	IUsuario usuario1
 	AutoHome autoH
 	RentAutoService rentAutoS
 	Empresa empresa
@@ -25,47 +26,77 @@ class AutoService_Test {
 	Auto auto4
 	Auto auto5
 	
+	Ubicacion ubicacionMoron
+	Ubicacion ubicacionRetiro
+	Ubicacion ubicacionMunro
+	Ubicacion ubicacionBerazategui
+	Ubicacion ubicacionQuilmes
+	Ubicacion ubicacionLanus
+	Ubicacion ubicacionLaPaternal
+	Ubicacion ubicacionSanIsidro
+	Ubicacion ubicacionEscalada
+	Ubicacion ubicacionBanfield
+	Ubicacion ubicacionMarcos_Paz
+	
 	@Before
 	def void startUp(){
 		autoH = new AutoHome
 		rentAutoS = new RentAutoService(autoH)
-		//autoS.anadirAuto("Fiat","Uno",1999,"ABC123",new Turismo(),new Double(1000),new Ubicacion("Retiro"))
-		//autoS.anadirAuto("Fiat","Siena",2011,"ABR459",new Deportivo(),new Double(1000),new Ubicacion("Lanus"))
-		//autoS.anadirAuto("Fiat","Punto",2015,"HTG205",new Familiar(),new Double(1000),new Ubicacion("Moron"))
+		usuario1 = new Usuario()
 		
-		auto1 = new Auto("Fiat","Uno",1999,"ABC123",new Turismo(),new Double(1000),new Ubicacion("Retiro"))
-		auto2 = new Auto("Fiat","Siena",2011,"ABR459",new Deportivo(),new Double(1000),new Ubicacion("Lanus"))
-		auto3 = new Auto("Fiat","Punto",2015,"HTG205",new Familiar(),new Double(1000),new Ubicacion("Moron"))
-		auto4 = new Auto("Fiat","Uno",1999,"CBW113",new Familiar(),new Double(1000),new Ubicacion("Munro"))
-		auto5 = new Auto("Fiat","Punto",2013,"LBG204",new Deportivo(),new Double(1000),new Ubicacion("Quilmes"))
+		ubicacionMoron = new Ubicacion("Moron")
+		ubicacionRetiro = new Ubicacion("Retiro")
+		ubicacionBanfield = new Ubicacion("Banfield")
+		ubicacionBerazategui = new Ubicacion("Berazategui")
+		ubicacionLanus = new Ubicacion("Lanus")
+		ubicacionLaPaternal = new Ubicacion("La Paternal")
+		ubicacionSanIsidro = new Ubicacion("San Isidro")
+		ubicacionEscalada = new Ubicacion("Escalada")
+		ubicacionMunro = new Ubicacion("Munro")
+		ubicacionMarcos_Paz = new Ubicacion("Marcos Paz")
 		
-		var Reserva reserva1 = new Reserva(auto1,new Ubicacion("Lanus"),new Ubicacion("Retiro"),new Date(10,10,2015),new Date(11,10,2015))
-		var Reserva reserva2 = new Reserva(auto2,new Ubicacion("La Paternal"),new Ubicacion("San Isidro"),new Date(10,12,2015),new Date(15,12,2015))
-		var Reserva reserva3 = new Reserva(auto3,new Ubicacion("Berazategui"),new Ubicacion("Escalada"),new Date(20,12,2015),new Date(23,12,2015))
+		auto1 = new Auto("Fiat","Uno",1999,"ABC123",new Turismo(),new Double(1000),ubicacionRetiro)
+		auto2 = new Auto("Fiat","Siena",2011,"ABR459",new Deportivo(),new Double(1000),ubicacionRetiro)
+		auto3 = new Auto("Fiat","Punto",2015,"HTG205",new Familiar(),new Double(1000),ubicacionMoron)
+		auto4 = new Auto("Fiat","Punto",2011,"RTF295",new Familiar(),new Double(1000),ubicacionBerazategui)
+		auto5 = new Auto("Fiat","Uno",1999,"CBW113",new Familiar(),new Double(1000),ubicacionMoron)
+		var Reserva reserva1 = new Reserva(auto1,ubicacionLanus,ubicacionRetiro,nuevaFecha(2015,12,10),nuevaFecha(2015,12,12),usuario1)
+		var Reserva reserva2 = new Reserva(auto2,ubicacionLaPaternal,ubicacionSanIsidro,nuevaFecha(2015,12,10),nuevaFecha(2015,12,15),usuario1)
+		var Reserva reserva3 = new Reserva(auto3,ubicacionMunro,ubicacionEscalada,nuevaFecha(2015,12,20),nuevaFecha(2015,12,23),usuario1)
+		var Reserva reserva4 = new Reserva(auto4,ubicacionBerazategui,ubicacionEscalada ,nuevaFecha(2015,12,20),nuevaFecha(2015,12,23),usuario1)
 		
 		auto1.reservas.add(reserva1)
 		auto2.reservas.add(reserva2)
 		auto3.reservas.add(reserva3)
+		auto4.reservas.add(reserva4)
 		
 		
 		var List<Reserva> reservas = new ArrayList<Reserva>()
 		reservas.add(reserva1)
 		reservas.add(reserva2)
 		reservas.add(reserva3)
+		reservas.add(reserva4)
 		
 		/*** **
 		 * persisto la empresa y recursivamente las reservas, ubicaciones y autos
 		 * */
-		 
-		//new(String cuit, String nombreEmpresa)
+		
+		//this.usuarios.contains(unaReserva.usuario) EMPRESA
 		empresa = new Empresa("50-43243252-3","Pepito Autos",reservas)
-		rentAutoS.anadirEmpresa(empresa)
+		rentAutoS.anadir(empresa)
 	}
 	
 	@Test
-	def consultarFiatUno() {
-		var Auto auto = rentAutoS.getAuto(1)
-		Assert.assertEquals("ABC123", auto.patente);
+	def void anadirFiatPunto2013() {
+		var auto5 = new Auto("Fiat","Punto",2013,"LBG204",new Deportivo(),new Double(1000),new Ubicacion(""))
+		rentAutoS.anadir(auto5)
+	}
+	
+	@Test
+	def void testObtenerTotalAutos(){
+		
+		var List<Auto> totalAutos = rentAutoS.obtenerTotalAutos
+		Assert.assertEquals(4,totalAutos.size)
 	}
 	
 	/**
@@ -74,36 +105,44 @@ class AutoService_Test {
 	
 	@Test
 	def testFiatUnoYFiatSienaDisponibles() {
-		var Ubicacion ubicacion = new Ubicacion("Constitucion")
-		var Date fecha = new Date()
-		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacion,fecha) as List<Auto>
+		var Ubicacion ubicacionInicial = ubicacionRetiro
+		var Date fechaInicio =  nuevaFecha(2015,12,8)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacionInicial,fechaInicio,null,null)
 		Assert.assertEquals("ABC123",autosDisponibles.get(0).patente );
 		Assert.assertEquals("ABR459",autosDisponibles.get(1).patente );
 		Assert.assertEquals(2,autosDisponibles.size);
 	}
 	
 	
-	/**
-	 * Como usuario quiero que me devuelva la información de los autos posibles para la consulta de reserva, 
-	 * entrando la siguiente información:
-		Ubicación Origen
-		Ubicación Destino
-		Fecha Inicio
-		Fecha Fin
-		Categoria de auto deseado
-	 * 
-	 */
-	 
-	 //en que cambia ubicacion Destino?
-	 @Test
-	def testMostrarInfoPuntoLBG204() {
-		var Ubicacion ubicacion = new Ubicacion("Quilmes")
-		var Date fechaInicio = new Date()
-		var Date fechaFin = new Date()
-		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponiblesDe(new Ubicacion("Bernal"), new Ubicacion("Aeroparque"),new Date(),new Date(),new Turismo()) as List<Auto>
-		Assert.assertEquals("ABC123",autosDisponibles.get(0).patente );
-		Assert.assertEquals("ABR459",autosDisponibles.get(1).patente );
-		Assert.assertEquals(2,autosDisponibles.size);
+	@Test
+	def testNoHayDisponiblesEnMoronEnFecha() {
+		var Ubicacion ubicacionInicial = ubicacionMoron
+		var Date fechaInicio = nuevaFecha(2015,12,21)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacionInicial,fechaInicio,null,null)
+		Assert.assertEquals(0,autosDisponibles.size);
+	}
+	
+	@Test
+	def testSoloFiatPuntoDisponible() {
+		var Ubicacion ubicacionInicial = ubicacionBerazategui
+		var Date fechaInicio = nuevaFecha(2015,12,19)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacionInicial,fechaInicio,null,null)
+		Assert.assertEquals(1,autosDisponibles.size);
+	}
+	
+	@Test
+	def testNoHayDisponiblesEnUbicacion() {
+		var Ubicacion ubicacionInicial = ubicacionLanus
+		var Date fechaInicio = nuevaFecha(2015,11,10)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacionInicial,fechaInicio,null,null)
+		Assert.assertEquals(0,autosDisponibles.size);
+	}
+	
+	@Test
+	def testTotalAutosFamiliares() {
+		rentAutoS.anadir(auto5)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(null,null,null,new Familiar())
+		Assert.assertEquals(3,autosDisponibles.size);
 	}
 	
 	/**
@@ -112,17 +151,18 @@ class AutoService_Test {
 	 
 	@Test
 	def void testRealizoReservaCorrectamente() {
-		var Reserva reserva = new Reserva(auto3,new Ubicacion("Moron"),new Ubicacion("Marcos Paz"),new Date(10,12,2015),new Date(15,12,2015))
-		rentAutoS.realizarReserva(reserva)
+		var Reserva reserva = new Reserva(auto5,ubicacionMoron,ubicacionMarcos_Paz,nuevaFecha(2015,12,10),nuevaFecha(2015,12,15),usuario1)
+		empresa.usuarios.add(usuario1)
 		empresa.agregarReserva(reserva)
-		
+		rentAutoS.realizarReserva(reserva)
 	}
 	
-	//que tire alguna excepcion
-//	@Test
-//	def testNoHayAutosParaReserva() {
-//		
-//	}
+	@Test(expected=ReservaException)
+	def void testUsuarioNoPerteneceAEmpresa() {
+		var Reserva reserva = new Reserva(auto5,ubicacionMoron,ubicacionBerazategui,nuevaFecha(2015,10,10),nuevaFecha(2015,10,11),usuario1)
+		empresa.agregarReserva(reserva)
+		rentAutoS.realizarReserva(reserva)
+	}
 	
 	@After
 	def void limpiar() {
