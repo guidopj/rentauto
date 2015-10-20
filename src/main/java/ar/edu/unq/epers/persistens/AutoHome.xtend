@@ -7,6 +7,7 @@ import java.util.Date
 import org.hibernate.Query
 import java.util.List
 import ar.edu.unq.epers.model.Categoria
+import ar.edu.unq.epers.model.Reserva
 
 class AutoHome {
 	
@@ -35,5 +36,12 @@ class AutoHome {
 		var List<Auto> todos = q.list();
 		//q.setInteger("mod", 2008)
 		return todos as List<Auto>
+	}
+	
+	def obtenerReservaPorNumeroSolicitud(Integer numSolicitud) {
+		var Query q = SessionManager.getSession().createQuery("from Reserva as reserva where reserva.numeroSolicitud = :numSolicitud")
+		 q.setInteger("numSolicitud", numSolicitud)
+		return q.list as List<Reserva>
+		//q.setInteger("mod", 2008)
 	}
 }

@@ -50,8 +50,6 @@ public class AutoService_Test {
   
   private Ubicacion ubicacionBerazategui;
   
-  private Ubicacion ubicacionQuilmes;
-  
   private Ubicacion ubicacionLanus;
   
   private Ubicacion ubicacionLaPaternal;
@@ -114,16 +112,16 @@ public class AutoService_Test {
     this.auto5 = _auto_4;
     Date _nuevaFecha = DateExtensions.nuevaFecha(2015, 12, 10);
     Date _nuevaFecha_1 = DateExtensions.nuevaFecha(2015, 12, 12);
-    Reserva reserva1 = new Reserva(this.auto1, this.ubicacionLanus, this.ubicacionRetiro, _nuevaFecha, _nuevaFecha_1, this.usuario1);
+    Reserva reserva1 = new Reserva(Integer.valueOf(100), this.auto1, this.ubicacionLanus, this.ubicacionRetiro, _nuevaFecha, _nuevaFecha_1, this.usuario1);
     Date _nuevaFecha_2 = DateExtensions.nuevaFecha(2015, 12, 10);
     Date _nuevaFecha_3 = DateExtensions.nuevaFecha(2015, 12, 15);
-    Reserva reserva2 = new Reserva(this.auto2, this.ubicacionLaPaternal, this.ubicacionSanIsidro, _nuevaFecha_2, _nuevaFecha_3, this.usuario1);
+    Reserva reserva2 = new Reserva(Integer.valueOf(101), this.auto2, this.ubicacionLaPaternal, this.ubicacionSanIsidro, _nuevaFecha_2, _nuevaFecha_3, this.usuario1);
     Date _nuevaFecha_4 = DateExtensions.nuevaFecha(2015, 12, 20);
     Date _nuevaFecha_5 = DateExtensions.nuevaFecha(2015, 12, 23);
-    Reserva reserva3 = new Reserva(this.auto3, this.ubicacionMunro, this.ubicacionEscalada, _nuevaFecha_4, _nuevaFecha_5, this.usuario1);
+    Reserva reserva3 = new Reserva(Integer.valueOf(102), this.auto3, this.ubicacionMunro, this.ubicacionEscalada, _nuevaFecha_4, _nuevaFecha_5, this.usuario1);
     Date _nuevaFecha_6 = DateExtensions.nuevaFecha(2015, 12, 20);
     Date _nuevaFecha_7 = DateExtensions.nuevaFecha(2015, 12, 23);
-    Reserva reserva4 = new Reserva(this.auto4, this.ubicacionBerazategui, this.ubicacionEscalada, _nuevaFecha_6, _nuevaFecha_7, this.usuario1);
+    Reserva reserva4 = new Reserva(Integer.valueOf(103), this.auto4, this.ubicacionBerazategui, this.ubicacionEscalada, _nuevaFecha_6, _nuevaFecha_7, this.usuario1);
     List<Reserva> _reservas = this.auto1.getReservas();
     _reservas.add(reserva1);
     List<Reserva> _reservas_1 = this.auto2.getReservas();
@@ -219,18 +217,21 @@ public class AutoService_Test {
   public void testRealizoReservaCorrectamente() {
     Date _nuevaFecha = DateExtensions.nuevaFecha(2015, 12, 10);
     Date _nuevaFecha_1 = DateExtensions.nuevaFecha(2015, 12, 15);
-    Reserva reserva = new Reserva(this.auto5, this.ubicacionMoron, this.ubicacionMarcos_Paz, _nuevaFecha, _nuevaFecha_1, this.usuario1);
+    Reserva reserva = new Reserva(Integer.valueOf(110), this.auto5, this.ubicacionMoron, this.ubicacionMarcos_Paz, _nuevaFecha, _nuevaFecha_1, this.usuario1);
     List<IUsuario> _usuarios = this.empresa.getUsuarios();
     _usuarios.add(this.usuario1);
     this.empresa.agregarReserva(reserva);
     this.rentAutoS.realizarReserva(reserva);
+    List<Reserva> _obtenerReservaPorNumeroSolicitud = this.rentAutoS.obtenerReservaPorNumeroSolicitud(Integer.valueOf(110));
+    int _size = _obtenerReservaPorNumeroSolicitud.size();
+    Assert.assertEquals(1, _size);
   }
   
   @Test(expected = ReservaException.class)
   public void testUsuarioNoPerteneceAEmpresa() {
     Date _nuevaFecha = DateExtensions.nuevaFecha(2015, 10, 10);
     Date _nuevaFecha_1 = DateExtensions.nuevaFecha(2015, 10, 11);
-    Reserva reserva = new Reserva(this.auto5, this.ubicacionMoron, this.ubicacionBerazategui, _nuevaFecha, _nuevaFecha_1, this.usuario1);
+    Reserva reserva = new Reserva(Integer.valueOf(111), this.auto5, this.ubicacionMoron, this.ubicacionBerazategui, _nuevaFecha, _nuevaFecha_1, this.usuario1);
     this.empresa.agregarReserva(reserva);
     this.rentAutoS.realizarReserva(reserva);
   }

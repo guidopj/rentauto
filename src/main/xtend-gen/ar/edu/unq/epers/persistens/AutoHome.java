@@ -2,6 +2,7 @@ package ar.edu.unq.epers.persistens;
 
 import ar.edu.unq.epers.model.Auto;
 import ar.edu.unq.epers.model.Categoria;
+import ar.edu.unq.epers.model.Reserva;
 import ar.edu.unq.epers.sesiones.SessionManager;
 import java.io.Serializable;
 import java.util.List;
@@ -40,5 +41,13 @@ public class AutoHome {
     q.setString("cat", _nombre);
     List<Auto> todos = q.list();
     return ((List<Auto>) todos);
+  }
+  
+  public List<Reserva> obtenerReservaPorNumeroSolicitud(final Integer numSolicitud) {
+    Session _session = SessionManager.getSession();
+    Query q = _session.createQuery("from Reserva as reserva where reserva.numeroSolicitud = :numSolicitud");
+    q.setInteger("numSolicitud", (numSolicitud).intValue());
+    List _list = q.list();
+    return ((List<Reserva>) _list);
   }
 }

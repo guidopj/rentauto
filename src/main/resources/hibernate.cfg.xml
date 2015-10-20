@@ -19,6 +19,7 @@
         <mapping resource="ar/edu/unq/epers/modelMaps/Auto.hbm.xml"></mapping>
         <mapping resource="ar/edu/unq/epers/modelMaps/Reserva.hbm.xml"></mapping>
         <mapping resource="ar/edu/unq/epers/modelMaps/Empresa.hbm.xml"></mapping>
+        <mapping resource="ar/edu/unq/epers/modelMaps/Usuario.hbm.xml"></mapping>
 		
     </session-factory>
 </hibernate-configuration>

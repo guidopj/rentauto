@@ -185,6 +185,16 @@ public class RentAutoService {
     return this.<List<Auto>>ejecutarBloque(_function);
   }
   
+  public List<Reserva> obtenerReservaPorNumeroSolicitud(final Integer numSolicitud) {
+    final Function0<List<Reserva>> _function = new Function0<List<Reserva>>() {
+      @Override
+      public List<Reserva> apply() {
+        return RentAutoService.this.autoHome.obtenerReservaPorNumeroSolicitud(numSolicitud);
+      }
+    };
+    return this.<List<Reserva>>ejecutarBloque(_function);
+  }
+  
   public Serializable realizarReserva(final Reserva reservaNueva) {
     Serializable _xblockexpression = null;
     {

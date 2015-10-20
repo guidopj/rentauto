@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ 
+<hibernate-mapping>
+    <class name="ar.edu.unq.epers.model.Usuario" table="Usuarios" >
+    
+        <id name="nombreDeUsuario" type="string">
+            <column name="nombre_usuario" />
+            <generator class="native" />
+        </id>
+
+        <property name="nombre" type="string">
+            <column name="nombre" length="20" not-null="false" unique="false" />
+        </property>
+        
+        <property name="apellido" type="string">
+            <column name="apellido" length="20" not-null="false" unique="false" />
+        </property>
+        
+        <property name="contrasena" type="string">
+            <column name="contrasena" length="20" not-null="false" unique="false" />
+        </property>
+        
+        <property name="email" type="string">
+            <column name="email" length="20" not-null="false" unique="false" />
+        </property>
+        
+        <property name="fechaDeNac" column="fecha_de_nac"/>
+        
+		<property name="validado" type="boolean">
+            <column name="validado" length="1" not-null="false" unique="false" />
+        </property>
+        
+        <bag name="reservas">
+		<key column="nombreDeUsuario" />
+    		<one-to-many class="ar.edu.unq.epers.model.Reserva" />
+    	</bag>
+    	
+    </class>
+</hibernate-mapping>

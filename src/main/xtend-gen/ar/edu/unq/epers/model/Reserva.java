@@ -32,7 +32,8 @@ public class Reserva {
   public Reserva() {
   }
   
-  public Reserva(final Auto auto, final Ubicacion origen, final Ubicacion destino, final Date inicio, final Date fin, final IUsuario usuario) {
+  public Reserva(final Integer numeroSolicitud, final Auto auto, final Ubicacion origen, final Ubicacion destino, final Date inicio, final Date fin, final IUsuario usuario) {
+    this.numeroSolicitud = numeroSolicitud;
     this.auto = auto;
     this.origen = origen;
     this.destino = destino;

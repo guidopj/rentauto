@@ -13,6 +13,15 @@
         <property name="cuit" type="string">
             <column name="cuit" length="20" not-null="false" unique="false" />
         </property>
+        
+        <property name="cantidadMaximaDeReservasActivas" type="java.lang.Integer">
+            <column  name="cantidad_maxima_reservas_activas" not-null="false" unique="false"/>
+        </property>
+        
+        <property name="valorMaximoPorDia" type="java.lang.Double">
+            <column  name="valor_maximo_por_dia" not-null="false" unique="false"/>
+        </property>
+        
         <property name="nombreEmpresa" type="string">
             <column name="nombre_empresa" length="20" not-null="false" unique="false" />
         </property>
@@ -21,6 +30,18 @@
 		<key column="id_empresa" />
     		<one-to-many class="ar.edu.unq.epers.model.Reserva" />
     	</bag>
+    	
+    	<list name="usuarios" cascade="save-update">
+			<key column="id_empresa" />
+			<list-index column="usuario_index"/>
+    		<one-to-many class="ar.edu.unq.epers.model.Usuario" />
+    	</list>
+    	
+    	<bag name="categoriasAdmitidas" cascade="save-update">
+		<key column="id_empresa" />
+    		<one-to-many class="ar.edu.unq.epers.model.Categoria" />
+    	</bag>
+    	
     </class>
 </hibernate-mapping>
 

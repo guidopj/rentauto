@@ -116,6 +116,12 @@ class RentAutoService {
 		]);
 	}
 	
+	def obtenerReservaPorNumeroSolicitud(Integer numSolicitud) {
+		this.ejecutarBloque([|
+			return this.autoHome.obtenerReservaPorNumeroSolicitud(numSolicitud)
+		]);
+	}
+	
 	def realizarReserva(Reserva reservaNueva) {
 		//Auto auto,Ubicacion origen,Ubicacion destino,Date inicio,Date fin
 		reservaNueva.reservar()

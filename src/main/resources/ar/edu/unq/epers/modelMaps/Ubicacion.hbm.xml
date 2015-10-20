@@ -14,12 +14,15 @@
 			<column name="nombre" length="20" not-null="false" unique="false" />
 		</property>
 
-<!-- 		<joined-subclass name="ar.edu.unq.epers.model.UbicacionVirtual" table="ubicaciones_virtuales"> -->
-<!-- 			<key column="id_ubicacion" /> -->
-<!-- 			<set name="ubicaciones" cascade="all"> -->
-<!-- 				<key column="id_ubicacion"/> -->
-<!-- 				<one-to-many class="ar.edu.unq.epers.model.Ubicacion"/> -->
-<!-- 			</set> -->
-<!-- 		</joined-subclass> -->
+ 		
+ 		<joined-subclass name="ar.edu.unq.epers.model.UbicacionVirtual" table="ubicaciones_virtuales" extends="ar.edu.unq.epers.model.Ubicacion">
+        	<key column="id_ubicacion" />
+                <list name="ubicaciones">
+					<key column="id_ubicacion" />
+					<list-index column="ubicacion_index"/>
+    				<many-to-many class="ar.edu.unq.epers.model.Ubicacion"/>
+    			</list>
+        </joined-subclass>
+ 		
 	</class>
 </hibernate-mapping>

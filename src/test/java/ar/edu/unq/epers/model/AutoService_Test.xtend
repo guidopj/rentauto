@@ -30,7 +30,6 @@ class AutoService_Test{
 	Ubicacion ubicacionRetiro
 	Ubicacion ubicacionMunro
 	Ubicacion ubicacionBerazategui
-	Ubicacion ubicacionQuilmes
 	Ubicacion ubicacionLanus
 	Ubicacion ubicacionLaPaternal
 	Ubicacion ubicacionSanIsidro
@@ -60,10 +59,10 @@ class AutoService_Test{
 		auto3 = new Auto("Fiat","Punto",2015,"HTG205",new Familiar(),new Double(1000),ubicacionMoron)
 		auto4 = new Auto("Fiat","Punto",2011,"RTF295",new Familiar(),new Double(1000),ubicacionBerazategui)
 		auto5 = new Auto("Fiat","Uno",1999,"CBW113",new Familiar(),new Double(1000),ubicacionMoron)
-		var Reserva reserva1 = new Reserva(auto1,ubicacionLanus,ubicacionRetiro,nuevaFecha(2015,12,10),nuevaFecha(2015,12,12),usuario1)
-		var Reserva reserva2 = new Reserva(auto2,ubicacionLaPaternal,ubicacionSanIsidro,nuevaFecha(2015,12,10),nuevaFecha(2015,12,15),usuario1)
-		var Reserva reserva3 = new Reserva(auto3,ubicacionMunro,ubicacionEscalada,nuevaFecha(2015,12,20),nuevaFecha(2015,12,23),usuario1)
-		var Reserva reserva4 = new Reserva(auto4,ubicacionBerazategui,ubicacionEscalada ,nuevaFecha(2015,12,20),nuevaFecha(2015,12,23),usuario1)
+		var Reserva reserva1 = new Reserva(100,auto1,ubicacionLanus,ubicacionRetiro,nuevaFecha(2015,12,10),nuevaFecha(2015,12,12),usuario1)
+		var Reserva reserva2 = new Reserva(101,auto2,ubicacionLaPaternal,ubicacionSanIsidro,nuevaFecha(2015,12,10),nuevaFecha(2015,12,15),usuario1)
+		var Reserva reserva3 = new Reserva(102,auto3,ubicacionMunro,ubicacionEscalada,nuevaFecha(2015,12,20),nuevaFecha(2015,12,23),usuario1)
+		var Reserva reserva4 = new Reserva(103,auto4,ubicacionBerazategui,ubicacionEscalada ,nuevaFecha(2015,12,20),nuevaFecha(2015,12,23),usuario1)
 		
 		auto1.reservas.add(reserva1)
 		auto2.reservas.add(reserva2)
@@ -151,15 +150,18 @@ class AutoService_Test{
 	 
 	@Test
 	def void testRealizoReservaCorrectamente() {
-		var Reserva reserva = new Reserva(auto5,ubicacionMoron,ubicacionMarcos_Paz,nuevaFecha(2015,12,10),nuevaFecha(2015,12,15),usuario1)
+		var Reserva reserva = new Reserva(110,auto5,ubicacionMoron,ubicacionMarcos_Paz,nuevaFecha(2015,12,10),nuevaFecha(2015,12,15),usuario1)
 		empresa.usuarios.add(usuario1)
 		empresa.agregarReserva(reserva)
 		rentAutoS.realizarReserva(reserva)
+		
+		Assert.assertEquals(1,rentAutoS.obtenerReservaPorNumeroSolicitud(110).size)
+		
 	}
 	
 	@Test(expected=ReservaException)
 	def void testUsuarioNoPerteneceAEmpresa() {
-		var Reserva reserva = new Reserva(auto5,ubicacionMoron,ubicacionBerazategui,nuevaFecha(2015,10,10),nuevaFecha(2015,10,11),usuario1)
+		var Reserva reserva = new Reserva(111,auto5,ubicacionMoron,ubicacionBerazategui,nuevaFecha(2015,10,10),nuevaFecha(2015,10,11),usuario1)
 		empresa.agregarReserva(reserva)
 		rentAutoS.realizarReserva(reserva)
 	}
