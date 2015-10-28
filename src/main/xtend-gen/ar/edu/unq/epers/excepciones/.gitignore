@@ -3,3 +3,4 @@
 /.EnviarMailException.java._trace
 /.UsuarioNoExisteException.java._trace
 /.UsuarioNoValidadoException.java._trace
+/.NoExisteUsuarioEnRedSocialException.java._trace

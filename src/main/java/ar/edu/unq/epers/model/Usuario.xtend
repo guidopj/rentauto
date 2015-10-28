@@ -29,6 +29,13 @@ class Usuario implements IUsuario{
 		this.codigoValidacion = null;
 	}
 	
+	new(String nombre, String apellido, String nombreUsuario, String email) {
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.nombreDeUsuario = nombreUsuario;
+		this.email = email;
+	}
+	
 	new(){}
 	
 	def validarme() {
