@@ -18,6 +18,7 @@ class Usuario implements IUsuario{
 	String codigoValidacion;
 	List<Reserva> reservas = newArrayList
 	
+	
 	new(String nombre, String apellido, String nombreUsuario, String email, Date fecha, String contrasena) {
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -36,7 +37,9 @@ class Usuario implements IUsuario{
 		this.email = email;
 	}
 	
-	new(){}
+	new() {
+	}
+	
 	
 	def validarme() {
 		this.validado = true;

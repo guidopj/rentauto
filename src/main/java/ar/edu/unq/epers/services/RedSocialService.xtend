@@ -12,6 +12,11 @@ package ar.edu.unq.epers.services
 import ar.edu.unq.epers.model.Usuario
 import ar.edu.unq.epers.persistens.RedSocialHome
 import ar.edu.unq.epers.model.Relacion
+import ar.edu.unq.epers.model.Mensaje
+import org.neo4j.graphdb.Path
+import org.neo4j.cypher.internal.compiler.v2_3.functions.Rels
+import org.neo4j.graphdb.Direction
+import org.neo4j.graphdb.traversal.Evaluators
 
 class RedSocialService {
 	
@@ -27,11 +32,11 @@ class RedSocialService {
 			this.redSocialHome.crearRelacionEntre(u1,u2,rel)
 		]
 	}
-	
+		
 	def obtenerAmigosDe(Usuario u){
 		GraphRunnerService::run[
 			this.redSocialHome.buscarRelacionDe(u,Relacion.AMISTAD)
-			return null
+			return null 
 		]
 	}
 	
@@ -45,6 +50,15 @@ class RedSocialService {
 	def obtenerRelacionesDe(Usuario usuario, Relacion relacion) {
 		GraphRunnerService::run[
 			this.redSocialHome.buscarRelacionDe(usuario,relacion); 
+		]
+	}
+	
+	def mandarMensajeA(Usuario usuario1,Usuario usuario2,Mensaje mensaje){
+		GraphRunnerService::run[
+			this.redSocialHome.crearNodoMensaje(mensaje);
+			this.redSocialHome.crearRelacionUsuarioMensaje(usuario1,mensaje,Relacion.EMISOR);
+			this.redSocialHome.crearRelacionUsuarioMensaje(usuario2,mensaje,Relacion.RECEPTOR);
+		    return null
 		]
 	}
 	
