@@ -12,10 +12,13 @@ import ar.edu.unq.epers.excepciones.NoExisteUsuarioEnRedSocialException
 import org.neo4j.graphdb.Result
 import ar.edu.unq.epers.services.GraphRunnerService
 import org.neo4j.graphdb.traversal.Evaluators
+import java.util.List
+import java.util.ArrayList
 
 class RedSocialHome {
 	
 	GraphDatabaseService graph
+	List<Usuario> usuarios = newArrayList
 	
 	private def usuarioLabel() {
 		DynamicLabel.label("Usuario")
@@ -62,6 +65,8 @@ class RedSocialHome {
 		nodo1.createRelationshipTo(nodo2, relacion);
 		
 	}
+	
+	
 	def crearRelacionUsuarioMensaje(Usuario usuario1,Mensaje mensaje , Relacion relacion) {
 		val nodo1 = this.getUsuario(usuario1);
 		val nodo2 = this.crearNodoMensaje(mensaje);
@@ -69,19 +74,32 @@ class RedSocialHome {
 		
 	}
 	
+	
 	def buscarRelacionDe(Usuario usuario, Relacion relacion) {
 		var String q =  "MATCH (n) WHERE (n)-[:" + Relacion.AMISTAD + "]-({ nombreDeUsuario:'"+usuario.nombreDeUsuario+"' }) RETURN n";
 		getGraphDb().execute(q)
 	}
 	
 	
-	def listaDeAmigosDeUnUsuario(){
+	def crearUsuarioDeNodo(Node node){
+	   
+	   var Usuario user = new Usuario
+	   user.nombre = node.getProperty("nombre")as String
+	   user.apellido = node.getProperty("apellido")as String
+	   return user
+	}
+	
+	
+	def listaDeAmigosDeUnUsuario(Usuario usuario){
+	//nodo =  getNodoDeUsuario de este usuario
+	var List<Usuario> usuarios = new ArrayList<Usuario>();
+	var Node n = this.getUsuario(usuario)
 	graphDb.traversalDescription()
 	        .depthFirst()
 	        .relationships(Relacion.AMISTAD)
 	        .evaluator( Evaluators.excludeStartPosition)
-	        .traverse()
-	        .nodes().map[it.getProperty("nombreDeUsuario")]
+	        .traverse(n)
+	        //.nodes().map[ usuarios.add(this.crearUsuarioDeNodo(it))]
 	}
 	
 }
