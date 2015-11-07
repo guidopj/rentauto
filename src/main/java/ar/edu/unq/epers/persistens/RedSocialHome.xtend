@@ -32,7 +32,8 @@ class RedSocialHome {
 		return GraphRunnerService.graphDb
 	}
 	
-	def getUsuario(Usuario usuario1){
+	def nodeUsuario(Usuario usuario1){
+		// Mediante este metodo se crea un nodo para determinado usuario.
 		var ResourceIterator<Node> ri = this.getGraphDb().findNodes(usuarioLabel, "nombreDeUsuario", usuario1.nombreDeUsuario)
 		if(ri.isEmpty){
 			System.out.println(ri.head)
@@ -60,15 +61,15 @@ class RedSocialHome {
 	}
 	
 	def crearRelacionEntre(Usuario usuario1, Usuario usuario2, Relacion relacion) {
-		val nodo1 = this.getUsuario(usuario1);
-		val nodo2 = this.getUsuario(usuario2);
+		val nodo1 = this.nodeUsuario(usuario1);
+		val nodo2 = this.nodeUsuario(usuario2);
 		nodo1.createRelationshipTo(nodo2, relacion);
 		
 	}
 	
 	
 	def crearRelacionUsuarioMensaje(Usuario usuario1,Mensaje mensaje , Relacion relacion) {
-		val nodo1 = this.getUsuario(usuario1);
+		val nodo1 = this.nodeUsuario(usuario1);
 		val nodo2 = this.crearNodoMensaje(mensaje);
 		nodo1.createRelationshipTo(nodo2, relacion);
 		
@@ -90,16 +91,28 @@ class RedSocialHome {
 	}
 	
 	
+	def agregarUsuario(List<Usuario> usuarios, Usuario user){
+		
+		usuarios.add(user)
+	}
+	
+	
 	def listaDeAmigosDeUnUsuario(Usuario usuario){
-	//nodo =  getNodoDeUsuario de este usuario
-	var List<Usuario> usuarios = new ArrayList<Usuario>();
-	var Node n = this.getUsuario(usuario)
+	var List<Usuario> usuarios = newArrayList
+	var Node n = this.nodeUsuario(usuario)
 	graphDb.traversalDescription()
 	        .depthFirst()
 	        .relationships(Relacion.AMISTAD)
-	        .evaluator( Evaluators.excludeStartPosition)
+	        .evaluator(Evaluators.excludeStartPosition)
 	        .traverse(n)
-	        //.nodes().map[ usuarios.add(this.crearUsuarioDeNodo(it))]
-	}
-	
+	        .nodes().map[it]
+	        this.agregarUsuario(usuarios, this.crearUsuarioDeNodo(n))
+	        return usuarios
+	/***
+	 * Por cada nodo que se recorre con su respectivo usuario, se agrega a una lista
+	 * cada uno de esos usuarios y a sus respectivos amigos. Una vez hecho todo esto,
+	 * se retorna dicha lista con todos los amigos de determiando usuario, y los amigos
+	 * de sus amigos y asi recursivamente.
+	 ***/ 
+	}	
 }
