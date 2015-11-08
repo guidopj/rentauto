@@ -138,12 +138,16 @@ class RedSocialHome {
 	        .traverse(n)
 	        
 	    	for(Path p : amigosConectados){
-	    		for(Node nodo : p.nodes()){
-	    			listaResultado.add(this.crearUsuarioDeNodo(nodo).nombreDeUsuario)
-	    		}
+				this.agregarConectados(p,listaResultado)
 	    	}
 	    	listaResultado
 	   	}
+	   	
+	 def agregarConectados(Path p, List<String> listaResultado){
+	 	for(Node nodo : p.nodes()){
+	    	listaResultado.add(this.crearUsuarioDeNodo(nodo).nombreDeUsuario)
+	    }
+	 }
 
 	
 	/***
