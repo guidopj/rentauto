@@ -5,16 +5,16 @@ import org.eclipse.xtend.lib.annotations.Accessors
 @Accessors
 class Mensaje {
 	
-	Usuario remitente
-	Usuario destinatario
+	String emisor
+	String receptor
 	String asunto
 	String contenido
 
 	new(){}
 	
-	new(Usuario remitente, Usuario destinatario, String asunto, String contenido) {
-		this.remitente = remitente;
-		this.destinatario = destinatario;
+	new(String emisor, String receptor,String asunto, String contenido) {
+		this.emisor = emisor
+		this.receptor = receptor 
 		this.asunto = asunto;
 		this.contenido = contenido;
 		 

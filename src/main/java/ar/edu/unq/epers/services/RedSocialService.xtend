@@ -13,10 +13,9 @@ import ar.edu.unq.epers.model.Usuario
 import ar.edu.unq.epers.persistens.RedSocialHome
 import ar.edu.unq.epers.model.Relacion
 import ar.edu.unq.epers.model.Mensaje
-import org.neo4j.graphdb.Path
-import org.neo4j.cypher.internal.compiler.v2_3.functions.Rels
-import org.neo4j.graphdb.Direction
-import org.neo4j.graphdb.traversal.Evaluators
+import java.util.List
+import java.util.ArrayList
+import ar.edu.unq.epers.excepciones.NoSonAmigosException
 
 class RedSocialService {
 	
@@ -36,7 +35,7 @@ class RedSocialService {
 	def obtenerAmigosDe(Usuario u){
 		GraphRunnerService::run[
 			this.redSocialHome.buscarRelacionDe(u,Relacion.AMISTAD)
-			return null 
+			null 
 		]
 	}
 	
@@ -53,12 +52,28 @@ class RedSocialService {
 		]
 	}
 	
+	def obtenerMensajesDe(Usuario usuario, Relacion relacion) {
+		GraphRunnerService::run[
+			this.redSocialHome.buscarRelacionMensajeDe(usuario,relacion); 
+		]
+	}
+	
 	def mandarMensajeA(Usuario usuario1,Usuario usuario2,Mensaje mensaje){
 		GraphRunnerService::run[
-			this.redSocialHome.crearNodoMensaje(mensaje);
-			this.redSocialHome.crearRelacionUsuarioMensaje(usuario1,mensaje,Relacion.EMISOR);
-			this.redSocialHome.crearRelacionUsuarioMensaje(usuario2,mensaje,Relacion.RECEPTOR);
-		    return null
+			var List<String> usuarios = new ArrayList<String>
+			usuarios = redSocialHome.buscarRelacionDe(usuario1,Relacion.AMISTAD);
+			if(usuarios.contains(usuario2.nombreDeUsuario)){
+				this.redSocialHome.enviarMensaje( usuario1, usuario2,mensaje);
+		    	return null	
+			}else{
+				throw new NoSonAmigosException(usuario2.nombreDeUsuario)
+			}
+		]
+	}
+	
+	def conectadosDe(Usuario usuario) {
+		GraphRunnerService::run[
+			this.redSocialHome.listaDeAmigosDeUnUsuario(usuario); 
 		]
 	}
 	

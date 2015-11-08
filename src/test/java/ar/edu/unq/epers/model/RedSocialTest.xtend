@@ -9,6 +9,9 @@ import org.neo4j.graphdb.Result
 import org.junit.After
 import org.junit.Assert
 import ar.edu.unq.epers.excepciones.NoExisteUsuarioEnRedSocialException
+import java.util.List
+import java.util.ArrayList
+import ar.edu.unq.epers.excepciones.NoSonAmigosException
 
 class RedSocialTest {
 	
@@ -17,6 +20,7 @@ class RedSocialTest {
 	Usuario usuario1
 	Usuario usuario2
 	Usuario usuario3
+	Usuario usuario4
 	
 	@Before
 	def void setUp(){
@@ -25,8 +29,10 @@ class RedSocialTest {
 		usuario1 = new Usuario("nombreUsuairo1", "apellidoUsuario1", "usuario1", "usuario1@yahoo.com")
 		usuario2 = new Usuario("nombreUsuairo2", "apellidoUsuario2", "usuario2", "usuario2@yahoo.com")
 		usuario3 = new Usuario("nombreUsuairo3", "apellidoUsuario3", "usuario3", "usuario3@yahoo.com")
+		usuario4 = new Usuario("nombreUsuairo4", "apellidoUsuario4", "usuario4", "usuario4@yahoo.com")
 		redSocialService.anadirUsuario(usuario1)
 		redSocialService.anadirUsuario(usuario2)
+		redSocialService.anadirUsuario(usuario4)
 		
 	}
 	
@@ -37,10 +43,12 @@ class RedSocialTest {
 	//Como usuario quiero poder agregar a mis amigos que ya son miembro del sitio.
 	@Test
 	def void agregarAmigo_TEST(){
+		var List<String> usuarios = new ArrayList<String>
 		redSocialService.agregarRelacionEntre(usuario1,usuario2,Relacion.AMISTAD)
-		var Result result = redSocialService.obtenerRelacionesDe(usuario1,Relacion.AMISTAD)
-		Assert.assertTrue(result.resultAsString.contains("usuario2"))
-		Assert.assertFalse(result.resultAsString.contains("usuario1"))
+		usuarios = redSocialService.obtenerRelacionesDe(usuario1,Relacion.AMISTAD)
+		
+		Assert.assertTrue(usuarios.contains("usuario2"))
+		Assert.assertEquals(1,usuarios.length)
 	}
 	
 	@Test(expected=NoExisteUsuarioEnRedSocialException)
@@ -52,15 +60,78 @@ class RedSocialTest {
 	
 	@Test
 	def void consultarAmigos_TEST(){
+		var List<String> usuarios = new ArrayList<String>
 		redSocialService.agregarRelacionEntre(usuario1,usuario2,Relacion.AMISTAD)
 		redSocialService.anadirUsuario(usuario3)
 		redSocialService.agregarRelacionEntre(usuario1,usuario3,Relacion.AMISTAD)
 		
-		val Result result = redSocialService.obtenerRelacionesDe(usuario1,Relacion.AMISTAD)
+		usuarios = redSocialService.obtenerRelacionesDe(usuario1,Relacion.AMISTAD)
 		
-		Assert.assertTrue(result.resultAsString.contains("usuario2"))
-		Assert.assertTrue(result.resultAsString.contains("usuario3"))
+		Assert.assertTrue(usuarios.contains("usuario2"))
+		Assert.assertTrue(usuarios.contains("usuario3"))
+		Assert.assertFalse(usuarios.contains("usuario4"))
 	}
+	
+	//Como usuario quiero poder mandar mensajes a mis amigos.
+	
+	
+	@Test(expected=NoSonAmigosException)
+	def void envioMensajeSinSerAmigo_TEST(){
+		var Mensaje men = new Mensaje(usuario1.nombreDeUsuario,usuario2.nombreDeUsuario,"un asunto para un mensaje","un contenido para un mensaje")
+		redSocialService.mandarMensajeA(usuario1,usuario2,men)
+	}
+	
+	@Test
+	def void envioMensajeSiendoAmigo_TEST(){
+		redSocialService.agregarRelacionEntre(usuario1,usuario2,Relacion.AMISTAD)
+		var Mensaje men = new Mensaje(usuario1.nombreDeUsuario,usuario2.nombreDeUsuario,"un asunto para un mensaje","un contenido para un mensaje")
+		redSocialService.mandarMensajeA(usuario1,usuario2,men)
+		
+		var List<Mensaje> mensajes = redSocialService.obtenerMensajesDe(usuario2,Relacion.RECEPTOR)
+		//los mensajes de usuario2
+		Assert.assertEquals("un contenido para un mensaje",mensajes.get(0).contenido)
+		Assert.assertEquals(1,mensajes.length)
+	}
+	
+	/**
+	 * Como usuario quiero poder saber todas las personas 
+	 * con las que estoy conectado, o sea mis amigos 
+	 * y los amigos de mis amigos recursivamente
+	 */
+	 
+	 @Test
+	 def void amigosConectados_TEST(){
+	 	redSocialService.anadirUsuario(usuario3)
+	 	
+	 	redSocialService.agregarRelacionEntre(usuario1,usuario2,Relacion.AMISTAD)
+	 	redSocialService.agregarRelacionEntre(usuario2,usuario3,Relacion.AMISTAD)
+	 	redSocialService.agregarRelacionEntre(usuario3,usuario4,Relacion.AMISTAD)
+	 	
+	 	var List <String> usr = new ArrayList<String>
+	 	
+	 	/**
+	 	 * le pongo evaluator(Evaluators.excludeStartPosition) sin embargo el usuario1 me lo añade igual
+	 		y me los repite
+	 	 *  usuario1
+			usuario2
+			usuario1
+			usuario2
+			usuario3
+			usuario1
+			usuario2
+			usuario3
+			usuario4 */
+		
+	 	usr = redSocialService.conectadosDe(usuario1)
+	 	
+	 	for(String s: usr){
+			System.out.println(s)
+		}
+	 
+		Assert.assertTrue(usr.contains(usuario2.nombreDeUsuario))
+		Assert.assertTrue(usr.contains(usuario3.nombreDeUsuario))
+		Assert.assertTrue(usr.contains(usuario4.nombreDeUsuario))
+	 }
 	
 	@After
 	def void borrarNodosYRelaciones(){
