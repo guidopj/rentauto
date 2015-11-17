@@ -4,7 +4,6 @@ package ar.edu.unq.epers.persistens
 import ar.edu.unq.epers.model.Usuario
 import ar.edu.unq.epers.model.Mensaje
 import ar.edu.unq.epers.model.Relacion
-import org.neo4j.graphdb.GraphDatabaseService
 import org.neo4j.graphdb.DynamicLabel
 import org.neo4j.graphdb.Node
 import org.neo4j.graphdb.ResourceIterator
@@ -15,16 +14,10 @@ import org.neo4j.graphdb.traversal.Evaluators
 import java.util.List
 import java.util.ArrayList
 import org.neo4j.graphdb.Relationship
-import org.neo4j.graphdb.ResourceIterable
-import org.neo4j.graphdb.traversal.Traverser
 import org.neo4j.graphdb.Path
-import org.neo4j.graphdb.traversal.TraversalDescription
-import org.neo4j.kernel.Traversal
+
 
 class RedSocialHome {
-	
-	GraphDatabaseService graph
-	List<Usuario> usuarios = newArrayList
 	
 
 	private def miLabel(String label){
@@ -130,18 +123,15 @@ class RedSocialHome {
 	
 	def  listaDeAmigosDeUnUsuario(Usuario usuario){
 		var Node n = this.nodeUsuario(usuario)
-		var List<String> listaResultado = new ArrayList<String>()
-		var Traverser amigosConectados = graphDb.traversalDescription()
+		graphDb.traversalDescription()
 	        .breadthFirst()
 	        .relationships(Relacion.AMISTAD)
 	        .evaluator(Evaluators.excludeStartPosition)
 	        .traverse(n)
-	        
-	    	for(Path p : amigosConectados){
-				this.agregarConectados(p,listaResultado)
-	    	}
-	    	listaResultado
+	        .nodes()
+	        .map[it.getProperty("nombre")].toSet
 	   	}
+	   	
 	   	
 	 def agregarConectados(Path p, List<String> listaResultado){
 	 	for(Node nodo : p.nodes()){
