@@ -22,7 +22,6 @@ class RedSocialService {
 	RedSocialHome redSocialHome
 	
 	new(RedSocialHome redSHome) {
-		//this.graph = graph
 		this.redSocialHome = redSHome
 	}
 	

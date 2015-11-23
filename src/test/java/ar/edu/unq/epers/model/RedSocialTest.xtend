@@ -28,10 +28,10 @@ class RedSocialTest {
 	def void setUp(){
 		redSocialHome = new RedSocialHome()
 		redSocialService = new RedSocialService(redSocialHome)
-		usuario1 = new Usuario("nombreUsuairo1", "apellidoUsuario1", "usuario1", "usuario1@yahoo.com")
-		usuario2 = new Usuario("nombreUsuairo2", "apellidoUsuario2", "usuario2", "usuario2@yahoo.com")
-		usuario3 = new Usuario("nombreUsuairo3", "apellidoUsuario3", "usuario3", "usuario3@yahoo.com")
-		usuario4 = new Usuario("nombreUsuairo4", "apellidoUsuario4", "usuario4", "usuario4@yahoo.com")
+		usuario1 = new Usuario("nombre1", "apellidoUsuario1", "nombreUsuairo1", "usuario1@yahoo.com")
+		usuario2 = new Usuario("nombre2", "apellidoUsuario2", "nombreUsuairo2", "usuario2@yahoo.com")
+		usuario3 = new Usuario("nombre3", "apellidoUsuario3", "nombreUsuairo3", "usuario3@yahoo.com")
+		usuario4 = new Usuario("nombre4", "apellidoUsuario4", "nombreUsuairo4", "usuario4@yahoo.com")
 		redSocialService.anadirUsuario(usuario1)
 		redSocialService.anadirUsuario(usuario2)
 		redSocialService.anadirUsuario(usuario4)
@@ -49,7 +49,7 @@ class RedSocialTest {
 		redSocialService.agregarRelacionEntre(usuario1,usuario2,Relacion.AMISTAD)
 		usuarios = redSocialService.obtenerRelacionesDe(usuario1,Relacion.AMISTAD)
 		
-		Assert.assertTrue(usuarios.contains("usuario2"))
+		Assert.assertTrue(usuarios.contains("nombreUsuairo2"))
 		Assert.assertEquals(1,usuarios.length)
 	}
 	
@@ -69,9 +69,9 @@ class RedSocialTest {
 		
 		usuarios = redSocialService.obtenerRelacionesDe(usuario1,Relacion.AMISTAD)
 		
-		Assert.assertTrue(usuarios.contains("usuario2"))
-		Assert.assertTrue(usuarios.contains("usuario3"))
-		Assert.assertFalse(usuarios.contains("usuario4"))
+		Assert.assertTrue(usuarios.contains("nombreUsuairo2"))
+		Assert.assertTrue(usuarios.contains("nombreUsuairo3"))
+		Assert.assertFalse(usuarios.contains("nombreUsuairo4"))
 	}
 	
 	//Como usuario quiero poder mandar mensajes a mis amigos.
@@ -110,25 +110,8 @@ class RedSocialTest {
 	 	redSocialService.agregarRelacionEntre(usuario3,usuario4,Relacion.AMISTAD)
 	 	
 	 	var Set <String> usr = new HashSet<String>
-	 	
-	 	/**
-	 	 * le pongo evaluator(Evaluators.excludeStartPosition) sin embargo el usuario1 me lo añade igual
-	 		y me los repite
-	 	 *  usuario1
-			usuario2
-			usuario1
-			usuario2
-			usuario3
-			usuario1
-			usuario2
-			usuario3
-			usuario4 */
 		
 	 	usr = redSocialService.conectadosDe(usuario1)
-	 	
-	 	for(String s: usr){
-			System.out.println(s)
-		}
 	 
 		Assert.assertTrue(usr.contains(usuario2.nombreDeUsuario))
 		Assert.assertTrue(usr.contains(usuario3.nombreDeUsuario))

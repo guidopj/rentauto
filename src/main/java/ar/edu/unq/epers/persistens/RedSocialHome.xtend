@@ -126,10 +126,10 @@ class RedSocialHome {
 		graphDb.traversalDescription()
 	        .breadthFirst()
 	        .relationships(Relacion.AMISTAD)
-	        .evaluator(Evaluators.excludeStartPosition)
-	        .traverse(n)
-	        .nodes()
-	        .map[it.getProperty("nombre") as String].toSet
+            .evaluator(Evaluators.excludeStartPosition)
+            .traverse(n)
+            .nodes()
+	        .map[it.getProperty("nombreDeUsuario") as String].toSet
 	   	}
 	   	
 	   	
