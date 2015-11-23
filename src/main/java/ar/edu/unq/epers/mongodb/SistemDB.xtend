@@ -4,7 +4,9 @@ import com.mongodb.DB
 import com.mongodb.MongoClient
 import java.net.UnknownHostException
 import org.mongojack.JacksonDBCollection
+import org.eclipse.xtend.lib.annotations.Accessors
 
+@Accessors
 class SistemDB {
 	static SistemDB INSTANCE;
 	MongoClient mongoClient;

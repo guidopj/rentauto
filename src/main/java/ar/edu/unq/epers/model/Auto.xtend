@@ -18,13 +18,13 @@ class Auto {
 	List<Reserva> reservas = newArrayList()
 	Ubicacion ubicacionInicial
 
-	new(String marca, String modelo, Integer anio, String patente, Categoria categoria, Double costoBase, Ubicacion ubicacionInicial){
+	new(String marca, String modelo, Integer anio, String patente, Categoria categoria,Double costoBase, Ubicacion ubicacionInicial){
 		this.marca = marca
 		this.modelo = modelo
 		this.anio = anio
+		this.categoria = categoria
 		this.patente = patente
 		this.costoBase = costoBase
-		this.categoria = categoria
 		this.ubicacionInicial = ubicacionInicial
 	}
 	
@@ -38,7 +38,7 @@ class Auto {
 	
 	new(){}
 
-	def getUbicacion(){
+	def getUbicacionInicial(){
 		this.ubicacionParaDia(new Date());
 	}
 	

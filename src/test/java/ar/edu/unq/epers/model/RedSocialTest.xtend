@@ -12,6 +12,8 @@ import ar.edu.unq.epers.excepciones.NoExisteUsuarioEnRedSocialException
 import java.util.List
 import java.util.ArrayList
 import ar.edu.unq.epers.excepciones.NoSonAmigosException
+import java.util.Set
+import java.util.HashSet
 
 class RedSocialTest {
 	
@@ -107,7 +109,7 @@ class RedSocialTest {
 	 	redSocialService.agregarRelacionEntre(usuario2,usuario3,Relacion.AMISTAD)
 	 	redSocialService.agregarRelacionEntre(usuario3,usuario4,Relacion.AMISTAD)
 	 	
-	 	var List <String> usr = new ArrayList<String>
+	 	var Set <String> usr = new HashSet<String>
 	 	
 	 	/**
 	 	 * le pongo evaluator(Evaluators.excludeStartPosition) sin embargo el usuario1 me lo añade igual

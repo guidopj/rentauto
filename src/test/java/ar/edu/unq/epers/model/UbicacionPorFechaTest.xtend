@@ -9,7 +9,7 @@ class UbicacionPorFechaTest extends AbstractTest {
 		
 	@Test
 	def ubicacionReservasVacias(){
-		assertEquals(auto.ubicacionInicial, auto.ubicacion)
+		assertEquals(auto.ubicacionInicial, auto.ubicacionInicial)
 	}
 	
 	@Test

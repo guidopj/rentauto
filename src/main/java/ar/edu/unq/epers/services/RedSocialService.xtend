@@ -76,6 +76,7 @@ class RedSocialService {
 			this.redSocialHome.listaDeAmigosDeUnUsuario(usuario); 
 		]
 	}
+	
 	def esAmigoDe(Usuario usuario1,Usuario usuario2){			
 		this.obtenerRelacionesDe(usuario1,Relacion.AMISTAD).contains(usuario2.nombreDeUsuario)
 		

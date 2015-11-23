@@ -129,7 +129,7 @@ class RedSocialHome {
 	        .evaluator(Evaluators.excludeStartPosition)
 	        .traverse(n)
 	        .nodes()
-	        .map[it.getProperty("nombre")].toSet
+	        .map[it.getProperty("nombre") as String].toSet
 	   	}
 	   	
 	   	
