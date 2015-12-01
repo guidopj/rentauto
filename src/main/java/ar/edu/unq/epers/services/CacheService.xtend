@@ -12,12 +12,8 @@ class CacheService {
 		this.cacheHome = ch
 	}
 	
-	def getAutosDisponiblesPorFecha(Date dia){
-		this.cacheHome.obtenerAutosPorDia(dia)
-	}
-	
-	def getAutosDisponiblesPorUbicacion(String ubi){
-		this.cacheHome.obtenerAutosPorUbicacion(ubi)
+	def getAutosDisponiblesPorUbicacionYDia(String ubi,Date dia){
+		this.cacheHome.obtenerAutosPorUbicacionYDia(ubi,dia)
 	}
 	
 }

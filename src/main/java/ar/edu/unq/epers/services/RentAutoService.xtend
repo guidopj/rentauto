@@ -11,11 +11,13 @@ import ar.edu.unq.epers.model.Auto
 import java.util.ArrayList
 import org.eclipse.xtext.xbase.lib.Functions.Function0
 import ar.edu.unq.epers.model.Categoria
+import ar.edu.unq.epers.persistens.CacheHome
 
 @Accessors
 class RentAutoService {
 	
 	AutoHome autoHome
+	CacheHome cacheHome
 	
 	new(AutoHome autoH){
 		this.autoHome = autoH
@@ -39,8 +41,8 @@ class RentAutoService {
 		]);
 	}
 	
-	def private esMismaUbicacion(Ubicacion u, Ubicacion u1){
-		u.nombre.equals(u1.nombre)
+	def private esMismaUbicacion(String u, String u1){
+		u.equals(u1)
 	}
 	
 	
@@ -76,35 +78,41 @@ class RentAutoService {
 //	}
 	
 	
-	def obtenerAutosDisponibles(Ubicacion origen,Date inicio,Date fin,Categoria cat) {
-		this.ejecutarBloque([|
-			var List<Auto> autosDisponibles = new ArrayList<Auto>
-			var List<Auto> autos = this.autoHome.obtenerAutos()
-			for(Auto a : autos){
-				if(satisfaceFiltro(a,origen,inicio,fin,cat)){
-					autosDisponibles.add(a)
-				}
-			}
-			autosDisponibles 
-		]);
-	}
+//	def obtenerAutosDisponibles(String origen,Date inicio,Date fin,Categoria cat) {
+//		//agregar la cache  verificar que nada rompa
+//		this.ejecutarBloque([|
+//			var List<Auto> autosDisponibles = new ArrayList<Auto>
+//			var List<Auto> autos
+//			if(hayDisponibilidadEnCache(origen,inicio,fin)){
+//				autos = this.cacheHome.obtenerAutosPorUbicacionYDia(origen,inicio,fin) as List<Auto>
+//			}else{
+//				autos = this.autoHome.obtenerAutos()	
+//			}
+//			for(Auto a : autos){
+//				if(satisfaceFiltro(a,origen,inicio,fin,cat)){
+//					autosDisponibles.add(a)
+//				}
+//			}
+//			autosDisponibles 
+//		]);
+//	}
 	
-	def satisfaceFiltro(Auto auto,Ubicacion origen, Date inicio, Date fin, Categoria categoria) {
-		var boolRes = true
-		if(origen != null){
-			boolRes = boolRes && esMismaUbicacion(origen,auto.ubicacionInicial)
-		}
-		if(inicio != null){
-			boolRes = boolRes && tieneReservaDesdeInicio(auto,inicio)
-		}
-		if(fin != null){
-			boolRes = boolRes && tieneReservaHastaFin(auto,fin)
-		}
-		if(categoria != null){
-			boolRes = boolRes && tieneMismaCategoria(auto,categoria)
-		}
-		boolRes
-	}
+//	def satisfaceFiltro(Auto auto,String origen, Date inicio, Date fin, Categoria categoria) {
+//		var boolRes = true
+//		if(origen != null){
+//			boolRes = boolRes && esMismaUbicacion(origen,auto.ubicacionInicial)
+//		}
+//		if(inicio != null){
+//			boolRes = boolRes && tieneReservaDesdeInicio(auto,inicio)
+//		}
+//		if(fin != null){
+//			boolRes = boolRes && tieneReservaHastaFin(auto,fin)
+//		}
+//		if(categoria != null){
+//			boolRes = boolRes && tieneMismaCategoria(auto,categoria)
+//		}
+//		boolRes
+//	}
 	
 	def tieneMismaCategoria(Auto auto, Categoria categoria) {
 		auto.categoria.nombre.equals(categoria.nombre)

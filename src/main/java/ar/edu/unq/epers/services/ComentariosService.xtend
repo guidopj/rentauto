@@ -5,7 +5,7 @@ import ar.edu.unq.epers.model.Calificacion
 import ar.edu.unq.epers.model.Comentario
 import ar.edu.unq.epers.model.Usuario
 import ar.edu.unq.epers.persistens.ComentariosHome
-import ar.edu.unq.epers.model.Auto
+
 
 class ComentariosService {
 	

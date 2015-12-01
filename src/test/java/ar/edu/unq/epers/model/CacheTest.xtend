@@ -9,16 +9,23 @@ class CacheTest extends AbstractCacheTest{
 	
 	
 	@Test
-	def void accederAutosDeHoyPorDia(){
-		var ResultSet rs = cacheService.getAutosDisponiblesPorFecha(DateExtensions.nuevaFecha(2015,11,30))
+	def void accederAutosDeHoyPorUbicacionBerazategui(){
+		var ResultSet rs = cacheService.getAutosDisponiblesPorUbicacionYDia("Berazategui",DateExtensions.nuevaFecha(2015,12,01))
 		Assert.assertEquals(1,rs.size)
 	}
 	
 	@Test
-	def void accederAutosDeHoyPorUbicacionBerazategui(){
-		var ResultSet rs = cacheService.getAutosDisponiblesPorUbicacion("Berazategui")
-		Assert.assertEquals(1,rs.size)
+	def void accederAutosDeMananaPorUbicacionBerazategui(){
+		var ResultSet rs = cacheService.getAutosDisponiblesPorUbicacionYDia("Berazategui",DateExtensions.nuevaFecha(2015,12,02))
+		Assert.assertEquals(0,rs.size)
 	}
+	
+	@Test
+	def void accederAutosDeHoyPorUbicacionRetiro(){
+		var ResultSet rs = cacheService.getAutosDisponiblesPorUbicacionYDia("Retiro",DateExtensions.nuevaFecha(2015,12,01))
+		Assert.assertEquals(0,rs.size)
+	}
+	
 	
 	
 }

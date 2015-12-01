@@ -24,7 +24,6 @@ class AbstractCacheTest {
 		camposAuto.put("patente","text")
 		camposAuto.put("costoBase","double")
 		camposAuto.put("categoria","frozen<categoria>")
-		camposAuto.put("ubicacion","text")
 		
 		CassandraSessionCreator.crearStruct("TYPE","cache","auto",camposAuto)
 	}
@@ -62,7 +61,7 @@ class AbstractCacheTest {
 		campos.put("auto","frozen<auto>")
 		campos.put("dia","timestamp")
 		campos.put("ubicacion","text")
-		campos.put("PRIMARY KEY","(ubicacion,dia,id)"
+		campos.put("PRIMARY KEY","(ubicacion,dia)"
 		 );
 
 		CassandraSessionCreator.crearStruct("TABLE","cache","autosDisponibles",campos)
@@ -77,11 +76,11 @@ class AbstractCacheTest {
 		
 		
 		var Mapper<DisponibilidadAuto> dispMapper = new MappingManager(CassandraSessionCreator.cassandraSession).mapper(DisponibilidadAuto);
-		var AutoCassandra auto1 = new AutoCassandra(111,"Fiat","Uno",1999,"ABC123",new Double(1000),new Turismo(),"Moron")
-		var DisponibilidadAuto dispAuto = new DisponibilidadAuto(111,auto1,DateExtensions.nuevaFecha(2015,11,30))
+		var AutoCassandra auto1 = new AutoCassandra("Fiat","Uno",1999,"ABC123",new Double(1000),new Turismo())
+		var DisponibilidadAuto dispAuto = new DisponibilidadAuto(auto1,DateExtensions.nuevaFecha(2015,11,30),"Moron")
 		
-		var AutoCassandra auto2 = new AutoCassandra(111,"Fiat","Siena",2007,"ABC125",new Double(1000),new Turismo(),"Berazategui")
-		var DisponibilidadAuto dispAuto2 = new DisponibilidadAuto(113,auto2,DateExtensions.nuevaFecha(2015,12,01))
+		var AutoCassandra auto2 = new AutoCassandra("Fiat","Siena",2007,"ABC125",new Double(1000),new Turismo())
+		var DisponibilidadAuto dispAuto2 = new DisponibilidadAuto(auto2,DateExtensions.nuevaFecha(2015,12,01),"Berazategui")
 		
 		dispMapper.save(dispAuto)
 		dispMapper.save(dispAuto2)
@@ -92,6 +91,7 @@ class AbstractCacheTest {
 		CassandraSessionCreator.eliminarKeyspace("cache")
 		CassandraSessionCreator.cassandraSession.close()
 		CassandraSessionCreator.cluster.close()
+		CassandraSessionCreator.cluster = null
 	}
 	
 	

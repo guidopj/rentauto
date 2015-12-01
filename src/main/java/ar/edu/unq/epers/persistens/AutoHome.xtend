@@ -2,8 +2,8 @@ package ar.edu.unq.epers.persistens
 
 import ar.edu.unq.epers.model.Auto
 import ar.edu.unq.epers.sesiones.SessionManager
-import ar.edu.unq.epers.model.Ubicacion
-import java.util.Date
+//import ar.edu.unq.epers.model.Ubicacion
+//import java.util.Date
 import org.hibernate.Query
 import java.util.List
 import ar.edu.unq.epers.model.Categoria
