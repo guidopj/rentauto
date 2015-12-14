@@ -1,26 +1,27 @@
 package ar.edu.unq.epers.services
 
-import ar.edu.unq.epers.persistens.AutoHome
-import org.eclipse.xtend.lib.annotations.Accessors
-import ar.edu.unq.epers.sesiones.SessionManager
-import ar.edu.unq.epers.model.Ubicacion
-import java.util.Date
-import ar.edu.unq.epers.model.Reserva
-import java.util.List
 import ar.edu.unq.epers.model.Auto
-import java.util.ArrayList
-import org.eclipse.xtext.xbase.lib.Functions.Function0
 import ar.edu.unq.epers.model.Categoria
-import ar.edu.unq.epers.persistens.CacheHome
+import ar.edu.unq.epers.model.DisponibilidadAuto
+import ar.edu.unq.epers.model.Reserva
+import ar.edu.unq.epers.model.Ubicacion
+import ar.edu.unq.epers.persistens.AutoHome
+import ar.edu.unq.epers.sesiones.SessionManager
+import java.util.ArrayList
+import java.util.Date
+import java.util.List
+import org.eclipse.xtend.lib.annotations.Accessors
+import org.eclipse.xtext.xbase.lib.Functions.Function0
 
 @Accessors
 class RentAutoService {
 	
 	AutoHome autoHome
-	CacheHome cacheHome
+	CacheService cacheService
 	
-	new(AutoHome autoH){
+	new(AutoHome autoH,CacheService cs){
 		this.autoHome = autoH
+		this.cacheService = cs
 	}
 	
 	def <T> ejecutarBloque(Function0< T> bloque) {
@@ -41,8 +42,8 @@ class RentAutoService {
 		]);
 	}
 	
-	def private esMismaUbicacion(String u, String u1){
-		u.equals(u1)
+	def private esMismaUbicacion(String u, Ubicacion u1){
+		u.equals(u1.nombre)
 	}
 	
 	
@@ -78,41 +79,41 @@ class RentAutoService {
 //	}
 	
 	
-//	def obtenerAutosDisponibles(String origen,Date inicio,Date fin,Categoria cat) {
-//		//agregar la cache  verificar que nada rompa
-//		this.ejecutarBloque([|
-//			var List<Auto> autosDisponibles = new ArrayList<Auto>
-//			var List<Auto> autos
-//			if(hayDisponibilidadEnCache(origen,inicio,fin)){
-//				autos = this.cacheHome.obtenerAutosPorUbicacionYDia(origen,inicio,fin) as List<Auto>
-//			}else{
-//				autos = this.autoHome.obtenerAutos()	
-//			}
+	def obtenerAutosDisponibles(Ubicacion origen,Date inicio,Date fin,Categoria cat) {
+		//agregar la cache  verificar que nada rompa
+		this.ejecutarBloque([|
+			var List<Auto> autos = new ArrayList<Auto>
+			var List<DisponibilidadAuto> autosDisponibles = this.cacheService.getAutosDisponiblesPorUbicacionYDia(origen.nombre,inicio,fin)
+			if(autosDisponibles.size == 0){
+				autos = this.autoHome.obtenerAutos()	
+			}else{
+				autos = autosDisponibles.map[e| e.auto]
+			}
 //			for(Auto a : autos){
 //				if(satisfaceFiltro(a,origen,inicio,fin,cat)){
-//					autosDisponibles.add(a)
+//					autosResultado.add(a)
 //				}
 //			}
-//			autosDisponibles 
-//		]);
-//	}
+			autos.filter[a | satisfaceFiltro(a,origen.nombre,inicio,fin,cat)] as List<Auto>
+		]);
+	}
 	
-//	def satisfaceFiltro(Auto auto,String origen, Date inicio, Date fin, Categoria categoria) {
-//		var boolRes = true
-//		if(origen != null){
-//			boolRes = boolRes && esMismaUbicacion(origen,auto.ubicacionInicial)
-//		}
-//		if(inicio != null){
-//			boolRes = boolRes && tieneReservaDesdeInicio(auto,inicio)
-//		}
-//		if(fin != null){
-//			boolRes = boolRes && tieneReservaHastaFin(auto,fin)
-//		}
-//		if(categoria != null){
-//			boolRes = boolRes && tieneMismaCategoria(auto,categoria)
-//		}
-//		boolRes
-//	}
+	def satisfaceFiltro(Auto auto,String origen, Date inicio, Date fin, Categoria categoria) {
+		var boolRes = true
+		if(origen != null){
+			boolRes = boolRes && esMismaUbicacion(origen,auto.ubicacionInicial)
+		}
+		if(inicio != null){
+			boolRes = boolRes && tieneReservaDesdeInicio(auto,inicio)
+		}
+		if(fin != null){
+			boolRes = boolRes && tieneReservaHastaFin(auto,fin)
+		}
+		if(categoria != null){
+			boolRes = boolRes && tieneMismaCategoria(auto,categoria)
+	}
+		boolRes
+	}
 	
 	def tieneMismaCategoria(Auto auto, Categoria categoria) {
 		auto.categoria.nombre.equals(categoria.nombre)

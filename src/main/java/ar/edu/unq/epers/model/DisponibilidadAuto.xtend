@@ -5,6 +5,7 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import org.eclipse.xtend.lib.annotations.Accessors
 import java.util.Date
+import com.datastax.driver.mapping.annotations.ClusteringColumn
 
 @Table(keyspace = "cache", name = "autosDisponibles")
 @Accessors
@@ -18,17 +19,21 @@ class DisponibilidadAuto {
 	 * Como administrador quiero que la información de disponibilidad de los autos se actualice en el caché 
 	 * cuando ocurra un cambio.
 	 * */
-	 
+	
+	
+	int id
 	@Frozen
 	AutoCassandra auto
-	@PartitionKey(1)
-	Date dia
+	Date fin
+	Date inicio
 	@PartitionKey(0)
 	String ubicacion
 	
-	new(AutoCassandra auto,Date dia,String ubicacion){
+	new(int id,AutoCassandra auto,Date inicio,Date fin,String ubicacion){
+		this.id = id
 		this.auto = auto
-		this.dia = dia
+		this.inicio = inicio
+		this.fin = fin
 		this.ubicacion = ubicacion
 	}
 }

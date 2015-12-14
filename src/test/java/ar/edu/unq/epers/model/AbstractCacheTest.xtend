@@ -1,16 +1,19 @@
 package ar.edu.unq.epers.model
 
-import org.junit.After
-import org.junit.Before
+import ar.edu.unq.epers.extensions.DateExtensions
+import ar.edu.unq.epers.persistens.CacheHome
+import ar.edu.unq.epers.services.CacheService
 import ar.edu.unq.epers.sesiones.CassandraSessionCreator
+import com.datastax.driver.mapping.Mapper
+import com.datastax.driver.mapping.MappingManager
+import com.datastax.driver.mapping.UDTMapper
 import java.util.HashMap
 import java.util.Map
-import ar.edu.unq.epers.services.CacheService
-import ar.edu.unq.epers.persistens.CacheHome
-import com.datastax.driver.mapping.MappingManager
-import com.datastax.driver.mapping.Mapper
 import org.eclipse.xtend.lib.annotations.Accessors
-import ar.edu.unq.epers.extensions.DateExtensions
+import org.junit.After
+import org.junit.Before
+
+import static ar.edu.unq.epers.sesiones.CassandraSessionCreator.*
 
 @Accessors
 class AbstractCacheTest {
@@ -59,28 +62,26 @@ class AbstractCacheTest {
 		var Map<String,String> campos = new HashMap()
 		campos.put("id","int")
 		campos.put("auto","frozen<auto>")
-		campos.put("dia","timestamp")
+		campos.put("inicio","timestamp")
+		campos.put("fin","timestamp")
 		campos.put("ubicacion","text")
-		campos.put("PRIMARY KEY","(ubicacion,dia)"
-		 );
+		campos.put("PRIMARY KEY","(ubicacion,inicio)")
 
 		CassandraSessionCreator.crearStruct("TABLE","cache","autosDisponibles",campos)
+		
+		////////////////
 		
 		cacheHome = new CacheHome()
 		
 		cacheService = new CacheService(cacheHome)
 		
 		
-		
-		//////
-		
-		
 		var Mapper<DisponibilidadAuto> dispMapper = new MappingManager(CassandraSessionCreator.cassandraSession).mapper(DisponibilidadAuto);
-		var AutoCassandra auto1 = new AutoCassandra("Fiat","Uno",1999,"ABC123",new Double(1000),new Turismo())
-		var DisponibilidadAuto dispAuto = new DisponibilidadAuto(auto1,DateExtensions.nuevaFecha(2015,11,30),"Moron")
+		var AutoCassandra auto1 = new AutoCassandra(333,"Fiat","Uno",1999,"ABC123",new Double(1000),new Turismo())
+		var DisponibilidadAuto dispAuto = new DisponibilidadAuto(111,auto1,DateExtensions.nuevaFecha(2015,11,30),DateExtensions.nuevaFecha(2015,12,01),"Moron")
 		
-		var AutoCassandra auto2 = new AutoCassandra("Fiat","Siena",2007,"ABC125",new Double(1000),new Turismo())
-		var DisponibilidadAuto dispAuto2 = new DisponibilidadAuto(auto2,DateExtensions.nuevaFecha(2015,12,01),"Berazategui")
+		var AutoCassandra auto2 = new AutoCassandra(555,"Fiat","Siena",2007,"ABC125",new Double(1000),new Turismo())
+		var DisponibilidadAuto dispAuto2 = new DisponibilidadAuto(222,auto2,DateExtensions.nuevaFecha(2015,12,01),DateExtensions.nuevaFecha(2015,12,03),"Berazategui")
 		
 		dispMapper.save(dispAuto)
 		dispMapper.save(dispAuto2)

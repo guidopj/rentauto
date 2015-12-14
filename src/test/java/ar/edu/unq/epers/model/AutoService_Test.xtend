@@ -1,16 +1,18 @@
 package ar.edu.unq.epers.model
 
-import org.junit.Before
 import ar.edu.unq.epers.persistens.AutoHome
-import org.junit.Test
-import org.junit.Assert
-import ar.edu.unq.epers.model.Auto
+import ar.edu.unq.epers.persistens.CacheHome
+import ar.edu.unq.epers.services.CacheService
+import ar.edu.unq.epers.services.RentAutoService
+import ar.edu.unq.epers.sesiones.SessionManager
+import java.util.ArrayList
 import java.util.Date
 import java.util.List
-import java.util.ArrayList
-import ar.edu.unq.epers.services.RentAutoService
 import org.junit.After
-import ar.edu.unq.epers.sesiones.SessionManager
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+
 import static ar.edu.unq.epers.extensions.DateExtensions.*
 
 class AutoService_Test{
@@ -19,6 +21,8 @@ class AutoService_Test{
 	AutoHome autoH
 	RentAutoService rentAutoS
 	Empresa empresa
+	CacheService cs
+	CacheHome ch
 	
 	Auto auto1
 	Auto auto2
@@ -40,7 +44,10 @@ class AutoService_Test{
 	@Before
 	def void startUp(){
 		autoH = new AutoHome
-		rentAutoS = new RentAutoService(autoH)
+		ch = new CacheHome()
+		cs = new CacheService(ch)
+		
+		rentAutoS = new RentAutoService(autoH,cs)
 		usuario1 = new Usuario()
 		
 		ubicacionMoron = new Ubicacion("Moron")
