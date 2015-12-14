@@ -43,4 +43,9 @@ class CacheHome {
 			var DisponibilidadAuto dispAuto = new DisponibilidadAuto(111,auto,inicio,fin,ubicacion)
 			dispMapper.save(dispAuto)
 		}
+		
+		def eliminarDisponibilidad(int idDisp){
+			var Mapper<DisponibilidadAuto> dispMapper = new MappingManager(CassandraSessionCreator.cassandraSession).mapper(DisponibilidadAuto);
+			dispMapper.delete(idDisp);
+		}
 }

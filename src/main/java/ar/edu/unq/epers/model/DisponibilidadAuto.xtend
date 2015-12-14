@@ -20,7 +20,6 @@ class DisponibilidadAuto {
 	 * cuando ocurra un cambio.
 	 * */
 	
-	
 	int id
 	@Frozen
 	AutoCassandra auto
