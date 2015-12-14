@@ -14,6 +14,8 @@ import org.junit.After
 import org.junit.Before
 
 import static ar.edu.unq.epers.sesiones.CassandraSessionCreator.*
+import ar.edu.unq.epers.services.RentAutoService
+import ar.edu.unq.epers.persistens.AutoHome
 
 @Accessors
 class AbstractCacheTest {
@@ -50,6 +52,8 @@ class AbstractCacheTest {
 	
 	CacheService cacheService
 	CacheHome cacheHome
+	RentAutoService rentAutoService
+	AutoHome autoHome
 	
 	@Before
 	def void startUp(){
@@ -73,8 +77,11 @@ class AbstractCacheTest {
 		
 		cacheHome = new CacheHome()
 		
+		autoHome = new AutoHome()
+		
 		cacheService = new CacheService(cacheHome)
 		
+		rentAutoService = new RentAutoService(autoHome,cacheService)
 		
 		var Mapper<DisponibilidadAuto> dispMapper = new MappingManager(CassandraSessionCreator.cassandraSession).mapper(DisponibilidadAuto);
 		var AutoCassandra auto1 = new AutoCassandra(333,"Fiat","Uno",1999,"ABC123",new Double(1000),new Turismo())

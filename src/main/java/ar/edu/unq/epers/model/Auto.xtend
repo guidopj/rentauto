@@ -8,6 +8,7 @@ import com.datastax.driver.mapping.annotations.UDT
 @Accessors
 //@UDT (keyspace = "cache", name = "auto")
 class Auto {
+	int id
 	String marca
 	String modelo
 	Integer anio

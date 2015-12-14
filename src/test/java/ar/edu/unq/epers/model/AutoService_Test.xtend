@@ -113,7 +113,7 @@ class AutoService_Test{
 	def testFiatUnoYFiatSienaDisponibles() {
 		var Ubicacion ubicacionInicial = ubicacionRetiro
 		var Date fechaInicio =  nuevaFecha(2015,12,8)
-		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacionInicial,fechaInicio,null,null)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles("Retiro",fechaInicio,null,null)
 		Assert.assertEquals("ABC123",autosDisponibles.get(0).patente );
 		Assert.assertEquals("ABR459",autosDisponibles.get(1).patente );
 		Assert.assertEquals(2,autosDisponibles.size);
@@ -124,7 +124,7 @@ class AutoService_Test{
 	def testNoHayDisponiblesEnMoronEnFecha() {
 		var Ubicacion ubicacionInicial = ubicacionMoron
 		var Date fechaInicio = nuevaFecha(2015,12,21)
-		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacionInicial,fechaInicio,null,null)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles("Moron",fechaInicio,null,null)
 		Assert.assertEquals(0,autosDisponibles.size);
 	}
 	
@@ -132,7 +132,7 @@ class AutoService_Test{
 	def testSoloFiatPuntoDisponible() {
 		var Ubicacion ubicacionInicial = ubicacionBerazategui
 		var Date fechaInicio = nuevaFecha(2015,12,19)
-		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacionInicial,fechaInicio,null,null)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles("Berazategui",fechaInicio,null,null)
 		Assert.assertEquals(1,autosDisponibles.size);
 	}
 	
@@ -140,7 +140,7 @@ class AutoService_Test{
 	def testNoHayDisponiblesEnUbicacion() {
 		var Ubicacion ubicacionInicial = ubicacionLanus
 		var Date fechaInicio = nuevaFecha(2015,11,10)
-		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles(ubicacionInicial,fechaInicio,null,null)
+		var List<Auto> autosDisponibles = rentAutoS.obtenerAutosDisponibles("Lanus",fechaInicio,null,null)
 		Assert.assertEquals(0,autosDisponibles.size);
 	}
 	

@@ -78,24 +78,25 @@ class RentAutoService {
 //		]);
 //	}
 	
-	
-	def obtenerAutosDisponibles(Ubicacion origen,Date inicio,Date fin,Categoria cat) {
-		//agregar la cache  verificar que nada rompa
+	def List<Auto> buscarEnHibernate(){
 		this.ejecutarBloque([|
+			val List<Auto> autosRet = this.autoHome.obtenerAutos()
+			autosRet
+		]);
+	}
+	
+	def obtenerAutosDisponibles(String origen,Date inicio,Date fin,Categoria cat) {
+		//agregar la cache  verificar que nada rompa
 			var List<Auto> autos = new ArrayList<Auto>
-			var List<DisponibilidadAuto> autosDisponibles = this.cacheService.getAutosDisponiblesPorUbicacionYDia(origen.nombre,inicio,fin)
+			var List<DisponibilidadAuto> autosDisponibles = this.cacheService.getAutosDisponiblesPorUbicacionYDia(origen,inicio,fin)
+			System.out.println(autosDisponibles)
+			//[null] me devuelve this.cacheService.getAutosDisponiblesPorUbicacionYDia
 			if(autosDisponibles.size == 0){
-				autos = this.autoHome.obtenerAutos()	
+				autos = this.buscarEnHibernate
 			}else{
 				autos = autosDisponibles.map[e| e.auto]
 			}
-//			for(Auto a : autos){
-//				if(satisfaceFiltro(a,origen,inicio,fin,cat)){
-//					autosResultado.add(a)
-//				}
-//			}
-			autos.filter[a | satisfaceFiltro(a,origen.nombre,inicio,fin,cat)] as List<Auto>
-		]);
+			autos.filter[a | satisfaceFiltro(a,origen,inicio,fin,cat)] as List<Auto>
 	}
 	
 	def satisfaceFiltro(Auto auto,String origen, Date inicio, Date fin, Categoria categoria) {

@@ -23,4 +23,9 @@ class CacheService {
 		this.cacheHome.obtenerAutosPorUbicacionYDia(ubi,inicioABuscar,finABuscar)
 	}
 	
+	def agregarDisponibilidad(AutoCassandra auto, Date inicio, Date fin, String ubicacion) {
+		this.cacheHome.agregarDisponibilidad(auto,inicio,fin,ubicacion)
+
+	}
+	
 }
